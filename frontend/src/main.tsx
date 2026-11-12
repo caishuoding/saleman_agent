@@ -21,9 +21,10 @@ import {
   X,
   AudioLines,
   ArrowLeft,
-  ChevronRight,
   LoaderCircle,
+  Mic,
 } from "lucide-react";
+import { VoicePracticePreview } from "./VoicePracticePreview";
 import {
   api,
   stream,
@@ -72,7 +73,7 @@ function RichText({ text, product }: { text: string; product?: Product }) {
   );
 }
 
-/** 实现按专项准备客户上下文的产品选择、训练、复盘与历史管理。 */
+/** 提供文字练习完整流程与语音入口预览，统一管理资料、教练面板和训练记录。 */
 function App() {
   const [route, setRoute] = useState(location.hash.slice(1) || "home");
   const [products, setProducts] = useState<Product[]>([]);
@@ -110,13 +111,18 @@ function App() {
     kind: number;
     key: string;
   } | null>(null);
-  const [page, arg] = route.split("/");
+  const [page, arg, voiceProductId] = route.split("/");
   const active = current;
   const selected = products.find(findSelected);
+  const voiceProduct = products.find(findVoiceProduct);
 
   /** 查找当前练习使用的产品，资料弹窗始终跟随本场产品。 */
   function findSelected(p: Product) {
     return p.id === current?.product_id;
+  }
+  /** 按语音预览路由查找产品，独立于后端已有文字练习记录。 */
+  function findVoiceProduct(product: Product) {
+    return page === "voice" && product.id === voiceProductId;
   }
   /** 更新 URL，使刷新和历史返回能够恢复当前练习页面。 */
   function navigate(value: string) {
@@ -673,7 +679,30 @@ function App() {
       </button>
     );
   }
-  /** 绘制首页专项入口，沿用原型卡片和主操作。 */
+  /** 为专项与完整流程提供文字、语音两个独立入口。 */
+  function practiceEntries(kind: number) {
+    return (
+      <div className="actions entry-actions">
+        <button
+          className="button"
+          data-action="choose"
+          data-kind={kind}
+          disabled={busy}
+        >
+          <MessagesSquare size={16} /> 文字练习
+        </button>
+        <button
+          className="button voice-entry"
+          data-action="nav"
+          data-id={"voice/" + kind}
+          disabled={busy}
+        >
+          <Mic size={16} /> 语音练习
+        </button>
+      </div>
+    );
+  }
+  /** 绘制首页专项卡片与文字、语音双入口。 */
   function renderTraining(kind: number) {
     const Icon = ICONS[kind];
     return (
@@ -681,18 +710,11 @@ function App() {
         <Icon size={30} />
         <h2>{TYPES[kind]}</h2>
         <p className="muted">{GOALS[kind]}</p>
-        <button
-          className="button"
-          data-action="choose"
-          data-kind={kind}
-          disabled={busy}
-        >
-          进入专项 <ChevronRight size={15} />
-        </button>
+        {practiceEntries(kind)}
       </article>
     );
   }
-  /** 绘制产品目录，并按所处页面提供学习或选择操作。 */
+  /** 按目录、文字准备或语音预览页面绘制产品及对应入口。 */
   function renderProduct(p: Product) {
     return (
       <article className="product-card" key={p.id}>
@@ -716,6 +738,16 @@ function App() {
               disabled={busy}
             >
               选择此产品
+            </button>
+          )}
+          {page === "voice" && (
+            <button
+              className="button primary"
+              data-action="nav"
+              data-id={`voice/${arg}/${p.id}`}
+              disabled={busy}
+            >
+              <Mic size={16} /> 选择此产品
             </button>
           )}
         </div>
@@ -835,7 +867,14 @@ function App() {
     for (const p of products) if (p.id === id) return p.name;
     return id;
   }
-  /** 按路由和专项绘制产品准备状态、任务、训练及复盘页面。 */
+  /** 按资料页的真实来源标明返回产品选择、语音练习或项目资料。 */
+  function productReturnLabel() {
+    const [returnPage, , productId] = productReturn.current.split("/");
+    if (returnPage === "choose" || (returnPage === "voice" && !productId))
+      return "返回产品选择";
+    return returnPage === "voice" ? "返回语音练习" : "返回项目资料";
+  }
+  /** 按路由绘制文字训练、语音界面预览、产品资料及训练记录。 */
   function content() {
     if (loading && !busy)
       return (
@@ -884,25 +923,30 @@ function App() {
                 需求沟通与方案介绍 → 商务谈判与合作推进
               </p>
             </div>
-            <button
-              className="button primary"
-              data-action="choose"
-              data-kind="2"
-              disabled={busy}
-            >
-              进入练习
-            </button>
+            {practiceEntries(2)}
           </section>
         </div>
       );
     }
-    if (page === "library" || page === "choose")
+    if (page === "voice" && voiceProduct && TYPES[Number(arg)])
+      return (
+        <VoicePracticePreview
+          product={voiceProduct}
+          practiceType={TYPES[Number(arg)]}
+          backTo={"voice/" + arg}
+          coachOpen={coach}
+        />
+      );
+    if (page === "library" || page === "choose" || page === "voice")
       return (
         <div className="page">
           <div className="section-head">
             <h1>{page === "library" ? "项目资料" : "选择推销的产品"}</h1>
-            {page === "choose" && (
-              <span className="muted">{TYPES[Number(arg)]}</span>
+            {(page === "choose" || page === "voice") && (
+              <span className="muted">
+                {page === "voice" ? "语音练习" : "文字练习"} ·{" "}
+                {TYPES[Number(arg)]}
+              </span>
             )}
           </div>
           <div className="product-library">{products.map(renderProduct)}</div>
@@ -925,10 +969,7 @@ function App() {
               data-id={productReturn.current}
               disabled={busy}
             >
-              <ArrowLeft size={16} />{" "}
-              {productReturn.current.startsWith("choose/")
-                ? "返回产品选择"
-                : "返回项目资料"}
+              <ArrowLeft size={16} /> {productReturnLabel()}
             </button>
           </div>
           <section className="case-banner">
@@ -1168,6 +1209,7 @@ function App() {
   if (page === "library" || page === "product") title = "项目资料";
   if (page === "history") title = "历史记录";
   if (page === "favorites") title = "收藏";
+  if (page === "voice") title = "语音练习";
   if (["prepare", "practice", "review"].includes(page) && active)
     title = TYPES[active.kind];
   return (
@@ -1186,9 +1228,14 @@ function App() {
               data-action="nav"
               data-id="home"
               aria-current={
-                ["home", "choose", "prepare", "practice", "review"].includes(
-                  page,
-                )
+                [
+                  "home",
+                  "choose",
+                  "prepare",
+                  "practice",
+                  "review",
+                  "voice",
+                ].includes(page)
                   ? "page"
                   : undefined
               }
@@ -1230,7 +1277,6 @@ function App() {
               收藏
             </button>
           </nav>
-          <div className="rail-bottom">文字陪练</div>
         </aside>
         <main className="work">
           <header className="top">

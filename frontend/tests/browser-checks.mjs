@@ -33,11 +33,19 @@ function installFixtures() {
     demo_url: "/products/crm/demo",
   };
   const originalFetch = window.fetch;
-  window.fixture = { practice, requests: [], failNext: false, holdNext: false };
+  window.fixture = {
+    practice,
+    requests: [],
+    writes: [],
+    failNext: false,
+    holdNext: false,
+  };
   /** 模拟公开 API 和 SSE 回复，保留应用真实的表单提交与消息渲染路径。 */
   window.fetch = async function fixtureFetch(input, options = {}) {
     const path = new URL(String(input), location.origin).pathname;
     if (!path.startsWith("/api/")) return originalFetch(input, options);
+    if (options.method && options.method !== "GET")
+      window.fixture.writes.push({ path, method: options.method });
     let value;
     if (path === "/api/health") value = { model_configured: true };
     else if (path === "/api/products") value = [product];
@@ -254,6 +262,9 @@ function layoutProblems() {
     ".customer-pane",
     ".coach-pane",
     ".report",
+    ".voice-layout",
+    ".voice-customer",
+    ".voice-coach",
   ]) {
     for (const element of document.querySelectorAll(selector)) {
       if (element.scrollWidth > element.clientWidth + 1)
@@ -467,5 +478,121 @@ for (const [route, title] of [
   }
   console.log(`PASS ${title} 桌面与窄窗口滚动`);
 }
+
+/** 统计业务写请求，确认语音 UI 预览仅进行页面浏览。 */
+function writeCount() {
+  return window.fixture.writes.length;
+}
+/** 读取首页两个模式的入口数量，确保三个练习均有双入口。 */
+function practiceEntryCounts() {
+  return {
+    text: document.querySelectorAll('.entry-actions [data-action="choose"]')
+      .length,
+    voice: document.querySelectorAll('.entry-actions [data-id^="voice/"]')
+      .length,
+  };
+}
+/** 读取语音待接入界面的状态，确认通话及教练发送均禁用。 */
+function voicePreviewState() {
+  return {
+    type: document.querySelector(".voice-session-title p")?.textContent,
+    status: document.querySelector("#voice-service-status")?.textContent,
+    callDisabled: document.querySelector(".voice-start")?.disabled,
+    coachDisabled: document.querySelector("#voice-coach textarea")?.disabled,
+  };
+}
+await page.cdp("Emulation.setDeviceMetricsOverride", {
+  width: 1440,
+  height: 900,
+  deviceScaleFactor: 1,
+  mobile: false,
+});
+await page.evaluate(changeRoute, "home");
+await page.waitForFunction(pageTitleMatches, "开始今天的练习");
+assert.deepEqual(await page.evaluate(practiceEntryCounts), {
+  text: 3,
+  voice: 3,
+});
+const beforeVoiceUi = await page.evaluate(writeCount);
+/** 读取资料页的返回按钮文字，检查导航目的地与文案一致。 */
+function productReturnText() {
+  return document.querySelector(".section-head button")?.textContent.trim();
+}
+for (const [kind, title] of [
+  [0, "需求沟通与方案介绍"],
+  [1, "商务谈判与合作推进"],
+  [2, "完整流程练习"],
+]) {
+  await page.click(`[data-action="choose"][data-kind="${kind}"]`);
+  await page.waitForSelector('[data-action="prepare"]');
+  assert.equal(new URL(await page.url()).hash, `#choose/${kind}`);
+  await page.evaluate(changeRoute, "home");
+  await page.waitForFunction(pageTitleMatches, "开始今天的练习");
+  await page.click(`[data-action="nav"][data-id="voice/${kind}"]`);
+  await page.waitForSelector(`[data-id="voice/${kind}/crm"]`);
+  await page.click('[data-id="product/crm"]');
+  await page.waitForFunction(pageTitleMatches, "客户关系管理系统");
+  assert.equal(await page.evaluate(productReturnText), "返回产品选择");
+  await page.click(`[data-id="voice/${kind}"]`);
+  await page.waitForSelector(`[data-id="voice/${kind}/crm"]`);
+  await page.click(`[data-id="voice/${kind}/crm"]`);
+  await page.waitForSelector(".voice-preview");
+  /** 判断教练面板是否已展开，避免前一页面的展开状态影响操作。 */
+  function voiceCoachOpen() {
+    return Boolean(document.querySelector("#voice-coach"));
+  }
+  if (!(await page.evaluate(voiceCoachOpen)))
+    await page.click('[data-action="coach"]');
+  await page.waitForSelector("#voice-coach");
+  assert.deepEqual(await page.evaluate(voicePreviewState), {
+    type: title,
+    status: "语音模型待接入",
+    callDisabled: true,
+    coachDisabled: true,
+  });
+  await page.click('[aria-label="返回语音产品选择"]');
+  await page.waitForSelector(`[data-id="voice/${kind}/crm"]`);
+  await page.evaluate(changeRoute, "home");
+  await page.waitForFunction(pageTitleMatches, "开始今天的练习");
+  console.log(`PASS ${title} 文字与语音入口`);
+}
+await page.click('[data-id="voice/0"]');
+await page.waitForSelector('[data-id="voice/0/crm"]');
+await page.click('[data-id="voice/0/crm"]');
+await page.waitForSelector(".voice-preview");
+await page.click('[data-id="product/crm"]');
+await page.waitForFunction(pageTitleMatches, "客户关系管理系统");
+assert.equal(await page.evaluate(productReturnText), "返回语音练习");
+await page.click('[data-id="voice/0/crm"]');
+await page.waitForSelector(".voice-preview");
+for (const [width, height] of [
+  [1440, 900],
+  [1024, 600],
+  [768, 480],
+  [390, 844],
+  [320, 568],
+]) {
+  await page.cdp("Emulation.setDeviceMetricsOverride", {
+    width,
+    height,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  assert.deepEqual(
+    await page.evaluate(layoutProblems),
+    [],
+    `${width}×${height} 语音界面`,
+  );
+  await assertReachable(".voice-start");
+  await assertReachable(".voice-transcript summary");
+  await assertReachable("#voice-coach textarea");
+  console.log(`PASS ${width}×${height} 语音界面及控件可达`);
+}
+assert.equal(
+  await page.evaluate(writeCount),
+  beforeVoiceUi,
+  "语音 UI 预览应仅浏览页面",
+);
+console.log("PASS 语音 UI 预览无业务写入");
 
 await task.finish({ keep: [] });
