@@ -414,7 +414,7 @@ function App() {
     }
     await perform(mutate);
   }
-  /** 提交客户、教练输入或行内名称编辑，保留失败内容供重新提交。 */
+  /** 提交消息或名称编辑，保留失败草稿，并在输入区仍存在且焦点空闲时恢复输入。 */
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy) return;
@@ -434,6 +434,12 @@ function App() {
       }
     }
     await perform(save);
+    /** 等待输入框解除禁用后恢复焦点，避免打断用户已选择的其他控件。 */
+    function restoreComposerFocus() {
+      if (form.isConnected && document.activeElement === document.body)
+        form.querySelector<HTMLTextAreaElement>("textarea")?.focus();
+    }
+    requestAnimationFrame(restoreComposerFocus);
   }
   /** 同步独立筛选条件及受控的名称输入。 */
   function change(event: ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
@@ -441,15 +447,17 @@ function App() {
     if (name === "rename") setRenameValue(value);
     else setFilters({ ...filters, [name]: value });
   }
-  /** 在输入区支持快捷发送，保留 Enter 换行与中文输入法行为。 */
+  /** Enter 发送，Shift+Enter 换行，兼容组合快捷键并避开输入法确认和长按重复事件。 */
   function composerKey(event: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (
       event.key === "Enter" &&
-      (event.ctrlKey || event.metaKey) &&
-      !event.nativeEvent.isComposing
+      !event.shiftKey &&
+      !event.altKey &&
+      !event.nativeEvent.isComposing &&
+      event.nativeEvent.keyCode !== 229
     ) {
       event.preventDefault();
-      event.currentTarget.form?.requestSubmit();
+      if (!event.repeat && !busy) event.currentTarget.form?.requestSubmit();
     }
   }
   /** 让模态框支持 Escape 和焦点循环。 */
@@ -486,6 +494,7 @@ function App() {
               : "你想向教练请教什么？"
           }
           onKeyDown={composerKey}
+          title="Enter 发送，Shift+Enter 换行"
           disabled={busy}
           required
         />
