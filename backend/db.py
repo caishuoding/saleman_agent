@@ -53,6 +53,23 @@ class Exchange(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
+class ModelCall(Base):
+    """逐次记录实际网络调用，区分本地编码数与服务端 usage，兼容重试和缺失统计。"""
+
+    __tablename__ = "model_calls"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    practice_id: Mapped[str | None] = mapped_column(ForeignKey("practices.id"), index=True)
+    exchange_seq: Mapped[int | None] = mapped_column(ForeignKey("exchanges.seq"), nullable=True)
+    agent: Mapped[str] = mapped_column(String(20))
+    purpose: Mapped[str] = mapped_column(String(20))
+    model: Mapped[str] = mapped_column(String(100))
+    tokenizer_sha256: Mapped[str] = mapped_column(String(64))
+    tokenizer_input_tokens: Mapped[int] = mapped_column(Integer)
+    usage: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    status: Mapped[str] = mapped_column(String(20))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
 def database(url: str):
     """创建 PostgreSQL 连接池及短事务会话工厂。"""
     engine = create_engine(url, pool_pre_ping=True)

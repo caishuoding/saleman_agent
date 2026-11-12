@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 
 from backend.agents import COACH_PROMPT, REVIEW_TASK, build_agent
 from backend.config import ROOT, Settings
-from backend.db import Base, Exchange, Practice, database, utcnow
+from backend.db import Base, Exchange, ModelCall, Practice, database, utcnow
 from backend.llm import DeepSeek, ModelError
 from backend.memory import Context, Memory
 from backend.products import PRODUCTS, TYPES, product
@@ -132,7 +132,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     """构建应用，允许测试通过环境配置替换外部模型 HTTP 地址。"""
     config = settings or Settings()
     engine, sessions = database(config.database_url)
-    model = DeepSeek(config)
+
+    def record_call(values: dict) -> None:
+        """独立提交每次模型调用记录，使业务回滚或摘要重试仍保留真实消耗。"""
+        with sessions() as session:
+            saved = session.get(ModelCall, values["id"])
+            if saved is None:
+                session.add(ModelCall(**values))
+            else:
+                saved.status, saved.usage = values["status"], values["usage"]
+            session.commit()
+
+    model = DeepSeek(config, record_call)
     memory = Memory(config, model)
 
     @asynccontextmanager
@@ -175,7 +186,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "model_configured": bool(config.deepseek_api_key),
             "model": config.deepseek_model,
             "context_tokens": config.model_context_tokens,
-            "token_counting": "tokenizer" if config.tokenizer_path else "conservative_utf8_bytes",
+            "token_counting": "deepseek_v41_tokenizer",
+            "tokenizer_sha256": memory.counter.fingerprint,
         }
 
     @app.get("/api/products")
@@ -242,7 +254,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             try:
                 if memory.counter.messages(context) > memory.budget(4096):
                     raise ModelError("客户情境准备材料超过当前上下文预算，请增大上下文配置后重试。")
-                result = await model.complete(context, 4096)
+                with model.scope(practice.id, None, "customer", "prepare"):
+                    result = await model.complete(context, 4096)
                 parsed = json.loads(
                     result.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
                 )
@@ -311,6 +324,49 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 practice.favorite = body.favorite
             session.commit()
             return practice_data(session, practice)
+
+    @app.get("/api/practices/{practice_id}/usage")
+    def get_usage(practice_id: str):
+        """返回本场逐次调用与真实累计用量，缺失统计明确计入未上报调用。"""
+        with sessions() as session:
+            require_practice(session, practice_id)
+            calls = []
+            totals = {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+                "reported_calls": 0,
+                "unreported_calls": 0,
+            }
+            for call in session.scalars(
+                select(ModelCall)
+                .where(ModelCall.practice_id == practice_id)
+                .order_by(ModelCall.created_at, ModelCall.id)
+            ):
+                calls.append(
+                    {
+                        "id": call.id,
+                        "exchange_seq": call.exchange_seq,
+                        "agent": call.agent,
+                        "purpose": call.purpose,
+                        "model": call.model,
+                        "status": call.status,
+                        "tokenizer_input_tokens": call.tokenizer_input_tokens,
+                        "tokenizer_sha256": call.tokenizer_sha256,
+                        "usage": call.usage,
+                        "created_at": call.created_at.isoformat(),
+                    }
+                )
+                keys = ("prompt_tokens", "completion_tokens", "total_tokens")
+                if call.usage is not None and all(
+                    type(call.usage.get(k)) is int and call.usage[k] >= 0 for k in keys
+                ):
+                    totals["reported_calls"] += 1
+                    for key in keys:
+                        totals[key] += call.usage[key]
+                else:
+                    totals["unreported_calls"] += 1
+            return {"calls": calls, "totals": totals}
 
     @app.get("/api/practices/{practice_id}/product")
     def get_practice_product(practice_id: str):
@@ -450,13 +506,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
                     graph = build_agent(graph_name, model, memory, save_memory)
                     answer = ""
-                    async for mode, chunk in graph.astream(
-                        {"context": ctx, "answer": ""}, stream_mode=["custom", "updates"]
-                    ):
-                        if mode == "custom":
-                            yield event(chunk["event"], chunk["data"])
-                        elif "reply" in chunk:
-                            answer = chunk["reply"]["answer"]
+                    with model.scope(practice.id, exchange.seq, graph_name, agent):
+                        async for mode, chunk in graph.astream(
+                            {"context": ctx, "answer": ""}, stream_mode=["custom", "updates"]
+                        ):
+                            if mode == "custom":
+                                yield event(chunk["event"], chunk["data"])
+                            elif "reply" in chunk:
+                                answer = chunk["reply"]["answer"]
                     exchange.output, exchange.status = answer, "complete"
                     if agent == "review":
                         practice.report, practice.report_status = answer, "complete"

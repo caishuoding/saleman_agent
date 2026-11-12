@@ -18,7 +18,16 @@ from backend.config import Settings
 @pytest.fixture
 def provider():
     """启动受控 SSE 模型服务并记录网络边界请求，支持一次性故障注入。"""
-    state = {"requests": [], "fail_next": False, "fail_summary": False}
+    state = {
+        "requests": [],
+        "usages": [],
+        "fail_next": False,
+        "fail_summary": False,
+        "omit_usage": False,
+        "finish_reason": "stop",
+        "barrier": None,
+    }
+    request_lock = threading.Lock()
 
     class Handler(BaseHTTPRequestHandler):
         """实现测试所需的模型 HTTP 协议，绝不用于应用生产模式。"""
@@ -29,7 +38,9 @@ def provider():
         def do_POST(self):
             """按真实 HTTP 请求内容生成确定性情境、摘要或回复。"""
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-            state["requests"].append(body)
+            with request_lock:
+                state["requests"].append(body)
+                request_number = len(state["requests"])
             messages = body["messages"]
             system = messages[0]["content"]
             summary = "你负责压缩" in system
@@ -71,6 +82,8 @@ def provider():
                 result = "可以追问客户最近一次发生问题的具体情况。"
             else:
                 result = "我们主要使用表格，客户交接时有遗漏。"
+            if state["barrier"] is not None:
+                state["barrier"].wait(timeout=10)
             self.send_response(200)
             self.send_header("Content-Type", "text/event-stream")
             self.end_headers()
@@ -79,7 +92,18 @@ def provider():
                     "choices": [{"delta": {"content": result[offset : offset + 20]}, "finish_reason": None}]
                 }
                 self.wfile.write(("data: " + json.dumps(chunk) + "\n\n").encode())
-            self.wfile.write(b'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n')
+            ending = {"choices": [{"delta": {}, "finish_reason": state["finish_reason"]}]}
+            if not state["omit_usage"]:
+                usage = {
+                    "prompt_tokens": 111 + request_number * 7,
+                    "completion_tokens": 13 + request_number,
+                    "total_tokens": 124 + request_number * 8,
+                    "prompt_cache_hit_tokens": 7,
+                    "prompt_cache_miss_tokens": 104 + request_number * 7,
+                }
+                state["usages"].append(usage)
+                ending["usage"] = usage
+            self.wfile.write(("data: " + json.dumps(ending) + "\n\ndata: [DONE]\n\n").encode())
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)

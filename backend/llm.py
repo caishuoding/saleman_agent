@@ -1,11 +1,17 @@
 """通过后端调用模型，统一处理流式回复、超时和摘要输出。"""
 
 import json
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
+from contextlib import contextmanager
+from contextvars import ContextVar
+from uuid import uuid4
 
 import httpx
 
 from backend.config import Settings
+from backend.tokenization import TokenCounter
+
+CALL_SCOPE: ContextVar[dict | None] = ContextVar("model_call_scope", default=None)
 
 
 class ModelError(Exception):
@@ -15,21 +21,50 @@ class ModelError(Exception):
 class DeepSeek:
     """隔离外部模型 HTTP 接口，密钥仅存在后端。"""
 
-    def __init__(self, settings: Settings):
-        """记录连接参数并创建有明确超时的异步 HTTP 客户端。"""
+    def __init__(self, settings: Settings, record_call: Callable[[dict], None]):
+        """绑定独立调用记录回调、官方 tokenizer 及带超时的 HTTP 客户端。"""
         self.settings = settings
         self.client = httpx.AsyncClient(timeout=httpx.Timeout(180, connect=15))
-        self.last_usage: dict = {}
+        self.record_call = record_call
+        self.counter = TokenCounter(settings.tokenizer_path, settings.deepseek_model)
 
     async def close(self) -> None:
         """关闭连接池以释放应用生命周期内的网络资源。"""
         await self.client.aclose()
 
-    async def stream(self, messages: list[dict], max_tokens: int) -> AsyncIterator[str]:
-        """逐段生成正文，仅传播脱敏错误，完成时记录服务端 token 用量。"""
+    @contextmanager
+    def scope(self, practice_id: str, exchange_seq: int | None, agent: str, purpose: str):
+        """为本次异步调用绑定练习与任务，子节点继承作用域且并发互不覆盖。"""
+        token = CALL_SCOPE.set(
+            {"practice_id": practice_id, "exchange_seq": exchange_seq, "agent": agent, "purpose": purpose}
+        )
+        try:
+            yield
+        finally:
+            CALL_SCOPE.reset(token)
+
+    async def stream(
+        self, messages: list[dict], max_tokens: int, purpose: str | None = None
+    ) -> AsyncIterator[str]:
+        """逐段生成正文，逐次持久化本地编码数和最终帧中的服务端真实用量。"""
         if not self.settings.deepseek_api_key:
             raise ModelError("请在项目 .env 中配置 DEEPSEEK_API_KEY，再重试。")
-        self.last_usage = {}
+        scope = CALL_SCOPE.get() or {}
+        call = {
+            "id": str(uuid4()),
+            "practice_id": scope.get("practice_id"),
+            "exchange_seq": scope.get("exchange_seq"),
+            "agent": scope.get("agent", "unknown"),
+            "purpose": purpose or scope.get("purpose", "unknown"),
+            "model": self.settings.deepseek_model,
+            "tokenizer_sha256": self.counter.fingerprint,
+            "tokenizer_input_tokens": self.counter.messages(messages),
+            "usage": None,
+            "status": "running",
+        }
+        self.record_call(call)
+        usage = None
+        status = "failed"
         try:
             async with self.client.stream(
                 "POST",
@@ -54,10 +89,11 @@ class DeepSeek:
                     if data == "[DONE]":
                         if not finished:
                             raise ModelError("模型回复未完整结束，请重试。")
+                        status = "complete"
                         return
                     payload = json.loads(data)
-                    if payload.get("usage"):
-                        self.last_usage = payload["usage"]
+                    if isinstance(payload.get("usage"), dict):
+                        usage = payload["usage"]
                     for choice in payload.get("choices", []):
                         reason = choice.get("finish_reason")
                         if reason == "length":
@@ -69,12 +105,19 @@ class DeepSeek:
                             yield text
                 if not finished:
                     raise ModelError("模型连接中断，请重试。")
+                status = "complete"
         except (httpx.HTTPError, ValueError) as exc:
             raise ModelError("模型连接失败或返回格式异常，请重试。") from exc
+        except BaseException as exc:
+            if not isinstance(exc, Exception):
+                status = "interrupted"
+            raise
+        finally:
+            self.record_call({**call, "usage": usage, "status": status})
 
-    async def complete(self, messages: list[dict], max_tokens: int) -> str:
-        """收集内部情境和摘要调用，不把内部材料发送到浏览器。"""
-        chunks = [chunk async for chunk in self.stream(messages, max_tokens)]
+    async def complete(self, messages: list[dict], max_tokens: int, purpose: str | None = None) -> str:
+        """收集内部任务正文，保留调用目的并记录每次情境或摘要用量。"""
+        chunks = [chunk async for chunk in self.stream(messages, max_tokens, purpose=purpose)]
         text = "".join(chunks).strip()
         if not text:
             raise ModelError("模型返回空内容，请重试。")

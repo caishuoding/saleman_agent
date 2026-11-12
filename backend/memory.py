@@ -3,34 +3,9 @@
 import copy
 import json
 from dataclasses import dataclass, field
-from typing import Any
 
 from backend.config import Settings
 from backend.llm import DeepSeek, ModelError
-
-
-class TokenCounter:
-    """优先使用指定 tokenizer，缺省采用 UTF-8 字节数作保守估算。"""
-
-    def __init__(self, path: str):
-        """仅从明确配置的本地目录加载 tokenizer，禁止远程代码。"""
-        self.tokenizer: Any = None
-        if path:
-            from transformers import AutoTokenizer
-
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                path, local_files_only=True, trust_remote_code=False
-            )
-
-    def text(self, value: str) -> int:
-        """计算正文 token，缺少匹配 tokenizer 时保守计量并对外标明口径。"""
-        if self.tokenizer is not None:
-            return len(self.tokenizer.encode(value, add_special_tokens=False))
-        return len(value.encode("utf-8"))
-
-    def messages(self, values: list[dict]) -> int:
-        """统计角色、正文和消息封装余量，始终计入本轮消息。"""
-        return 16 + sum(self.text(m["content"]) + self.text(m["role"]) + 16 for m in values)
 
 
 @dataclass
@@ -64,7 +39,7 @@ class Memory:
         """绑定模型和配置，每次请求仍使用独立的 Context。"""
         self.settings = settings
         self.model = model
-        self.counter = TokenCounter(settings.tokenizer_path)
+        self.counter = model.counter
 
     def budget(self, output_tokens: int) -> int:
         """从上下文上限扣除实际输出配置和安全余量。"""
@@ -122,8 +97,6 @@ class Memory:
             "区分客户事实、学员方案与教练建议；推测仍标为推测，禁止补造事实。"
             f"合并重复表达，优先保留当前有效事项。输出最多 {limit} token。"
         )
-        if self.counter.tokenizer is None:
-            instruction += f"本次采用保守字节预算，完整 JSON 的 UTF-8 字节数须不超过 {limit}，请充分精简。"
         summary = old.get("summary", {})
         remaining = list(records)
         input_budget = self.budget(limit)
@@ -153,7 +126,7 @@ class Memory:
                 },
             ]
             for attempt in range(2):
-                text = await self.model.complete(prompt, limit)
+                text = await self.model.complete(prompt, limit, purpose="summary")
                 try:
                     candidate_summary = json.loads(
                         text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
@@ -233,7 +206,7 @@ class Memory:
 
         # 估算尚未被当前摘要覆盖的记录体积。
         def size(source: str) -> int:
-            """计算单一来源未压缩原文的保守 token 数。"""
+            """计算单一来源未压缩原文的 tokenizer token 数。"""
             cursor = ctx.memory.get(source, {}).get("covered_until_seq", 0)
             return sum(self.counter.text(round_text(r)) for r in ctx.streams[source] if r["seq"] > cursor)
 

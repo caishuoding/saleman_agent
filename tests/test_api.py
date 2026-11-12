@@ -1,5 +1,12 @@
 """通过公开 HTTP 接口验证练习生命周期，模型服务在网络边界替换。"""
 
+import random
+
+
+def history_text(index: int, size: int = 1600, prefix: str = "") -> str:
+    """生成稳定且高信息密度的原文，避免重复字符被真实 tokenizer 大幅合并。"""
+    return f"{prefix}轮次{index:02d} " + random.Random(index).randbytes(size).hex()
+
 
 def test_products_expose_all_three_manuals(client):
     """资料入口提供三个真实产品手册及可用的产品演示地址。"""
@@ -80,7 +87,12 @@ def test_failed_message_retries_in_place_before_next_message(client, provider):
 
 def test_compression_keeps_all_originals_and_recent_six_rounds(make_client, provider):
     """经过公开消息接口触发压缩，所有原文可恢复，最近六轮仍以原文提供给客户。"""
-    client = make_client(model_context_tokens=12000, customer_output_tokens=512, customer_summary_tokens=1024)
+    client = make_client(
+        model_context_tokens=20000,
+        compression_threshold=0.65,
+        customer_output_tokens=512,
+        customer_summary_tokens=1024,
+    )
     draft = client.post(
         "/api/practices/prepare", json={"product_id": "crm", "kind": 2, "request_id": "compress-prepare"}
     ).json()
@@ -90,7 +102,7 @@ def test_compression_keeps_all_originals_and_recent_six_rounds(make_client, prov
         payload = {
             "agent": "customer",
             "request_id": f"round-{index}",
-            "content": f"轮次{index:02d} " + "x" * 1000,
+            "content": history_text(index),
         }
         response = client.post(f"/api/practices/{pid}/messages", json=payload)
         assert "event: done" in response.text, response.text
@@ -101,14 +113,22 @@ def test_compression_keeps_all_originals_and_recent_six_rounds(make_client, prov
     assert state["covered_until_seq"] > 0 and state["version"] >= 1
     last_prompt = provider["requests"][-1]["messages"]
     for index in range(5, 12):
-        assert any(m["content"] == f"轮次{index:02d} " + "x" * 1000 for m in last_prompt)
-    assert not any(m["content"] == "轮次00 " + "x" * 1000 for m in last_prompt)
+        assert any(m["content"] == history_text(index) for m in last_prompt)
+    assert not any(m["content"] == history_text(0) for m in last_prompt)
     assert "轮次00" in str(last_prompt)
+    calls = client.get(f"/api/practices/{pid}/usage").json()["calls"]
+    assert any(call["purpose"] == "summary" for call in calls)
+    assert all(call["usage"] is not None for call in calls)
 
 
 def test_failed_summary_keeps_cursor_and_retry_preserves_originals(make_client, provider):
     """摘要服务失败时覆盖游标保持旧值，重试后原始消息数量稳定。"""
-    client = make_client(model_context_tokens=12000, customer_output_tokens=512, customer_summary_tokens=1024)
+    client = make_client(
+        model_context_tokens=20000,
+        compression_threshold=0.65,
+        customer_output_tokens=512,
+        customer_summary_tokens=1024,
+    )
     draft = client.post(
         "/api/practices/prepare", json={"product_id": "crm", "kind": 0, "request_id": "summary-failure"}
     ).json()
@@ -118,12 +138,12 @@ def test_failed_summary_keeps_cursor_and_retry_preserves_originals(make_client, 
         payload = {
             "agent": "customer",
             "request_id": f"stable-{index}",
-            "content": f"轮次{index:02d} " + "x" * 1000,
+            "content": history_text(index),
         }
         assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=payload).text
     before = client.get(f"/api/practices/{pid}").json()
     provider["fail_summary"] = True
-    payload = {"agent": "customer", "request_id": "retry-summary", "content": "轮次10 " + "x" * 1000}
+    payload = {"agent": "customer", "request_id": "retry-summary", "content": history_text(10)}
     assert "event: error" in client.post(f"/api/practices/{pid}/messages", json=payload).text
     after = client.get(f"/api/practices/{pid}").json()
     assert after["memory_status"] == before["memory_status"]
@@ -138,7 +158,7 @@ def test_failed_summary_keeps_cursor_and_retry_preserves_originals(make_client, 
 def test_coach_compresses_sources_independently_and_reviews_current_context(make_client, provider):
     """教练分别压缩客户参考与自身问答，复盘直接复用这些上下文。"""
     client = make_client(
-        model_context_tokens=60000,
+        model_context_tokens=40000,
         coach_output_tokens=2048,
         customer_summary_tokens=1024,
         coach_summary_tokens=1024,
@@ -152,14 +172,14 @@ def test_coach_compresses_sources_independently_and_reviews_current_context(make
         payload = {
             "agent": "customer",
             "request_id": f"customer-{index}",
-            "content": f"客户轮次{index:02d} " + "x" * 1200,
+            "content": history_text(index, 1200, "客户"),
         }
         assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=payload).text
     for index in range(9):
         payload = {
             "agent": "coach",
             "request_id": f"coach-{index}",
-            "content": f"教练轮次{index:02d} " + "y" * 4000,
+            "content": history_text(index, 3000, "教练"),
         }
         response = client.post(f"/api/practices/{pid}/messages", json=payload)
         assert "event: done" in response.text, response.text
@@ -193,7 +213,7 @@ def test_coach_sees_public_opening_before_first_customer_message(client, provide
 
 def test_preparation_checks_budget_before_sending_business_manual(make_client, provider):
     """商务情境资料超过配置预算时，调用前返回可理解的错误。"""
-    client = make_client(model_context_tokens=12000)
+    client = make_client(model_context_tokens=10000)
     response = client.post(
         "/api/practices/prepare", json={"product_id": "crm", "kind": 1, "request_id": "small-context"}
     )

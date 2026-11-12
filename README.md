@@ -42,7 +42,9 @@ uv run uvicorn backend.app:create_app --factory --host 127.0.0.1 --port 8000
 
 默认模型为 `deepseek-flash`，上下文配置为 1,000,000，采用非思考模式。接入其他版本时调整 `MODEL_CONTEXT_TOKENS`。输出预留可通过 `CUSTOMER_OUTPUT_TOKENS`、`COACH_OUTPUT_TOKENS`、`REVIEW_OUTPUT_TOKENS` 调整，分别默认 2048、4096、8192。
 
-可在 `TOKENIZER_PATH` 配置与实际模型匹配的本地 tokenizer 目录。未配置时，系统以 UTF-8 字节数加消息封装余量作保守估算，因此可能提前压缩。`/api/health` 返回当前计量方式，实际接入时应依据 API 用量核对预算。
+默认使用项目内固定版本的 DeepSeek 官方 V4.1 tokenizer，结合官方 `deepseek-recipe` 消息模板编码完整请求，计入角色、消息边界和生成前缀。`TOKENIZER_PATH` 可覆盖为同版本的本地 tokenizer 文件或目录，资源来源及许可证保存在 `data/tokenizers/deepseek-v41/`。`/api/health` 返回计数方式与 tokenizer 指纹。
+
+每次情境生成、客户回复、教练问答、复盘、摘要和实际重试都保存独立 `model_calls` 记录，包含本地输入 token 数、服务端原始 `usage` 和调用状态。通过 `GET /api/practices/{id}/usage` 查看明细和累计输入、输出、总量。API 返回的 `usage` 是实际消耗依据，缺失统计标为未知；幂等重放沿用原记录。失败调用已收到的统计同样保留，并发请求分别关联所属练习和任务。
 
 ## 检查与测试
 
