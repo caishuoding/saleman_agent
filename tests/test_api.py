@@ -200,17 +200,52 @@ def test_coach_compresses_sources_independently_and_reviews_current_context(make
     assert len(after["exchanges"]) == 20
 
 
-def test_coach_sees_public_opening_before_first_customer_message(client, provider):
-    """客户开场白也是已发生的沟通，教练和复盘都能获得它。"""
+def test_practice_starts_empty_and_ignores_generated_opening(client, provider):
+    """学员先开口，旧格式生成的 opening 不进入界面和教练上下文。"""
     draft = client.post(
         "/api/practices/prepare", json={"product_id": "crm", "kind": 0, "request_id": "opening-prepare"}
     ).json()
     pid = draft["id"]
-    client.post(f"/api/practices/{pid}/start")
-    question = {"agent": "coach", "content": "客户刚才开场说了什么？", "request_id": "opening-coach"}
+    assert "opening" not in draft["scenario"]
+    started = client.post(f"/api/practices/{pid}/start").json()
+    assert started["exchanges"] == []
+    question = {
+        "agent": "coach",
+        "content": "我还没和客户交流，应该怎样开始？",
+        "request_id": "opening-coach",
+    }
     assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=question).text
-    assert draft["scenario"]["opening"] in str(provider["requests"][-1]["messages"])
+    assert "你好，我们可以先聊聊。" not in str(provider["requests"][-1]["messages"])
     assert "HIDDEN_NEED" not in str(provider["requests"][-1]["messages"])
+
+
+def test_customer_identity_and_message_roles_stay_aligned(client, provider):
+    """客户系统身份明确，首轮与后续 user/assistant 顺序对应实际学员与客户。"""
+    draft = client.post(
+        "/api/practices/prepare", json={"product_id": "crm", "kind": 0, "request_id": "identity-prepare"}
+    ).json()
+    pid = draft["id"]
+    client.post(f"/api/practices/{pid}/start")
+    first = {
+        "agent": "customer",
+        "content": "你好 我是我们公司的销售 我想和你介绍一下我们家的产品",
+        "request_id": "identity-first",
+    }
+    assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=first).text
+    initial = provider["requests"][-1]["messages"]
+    assert [m["role"] for m in initial] == ["system", "user"]
+    assert "你是测试企业的业务负责人李经理" in initial[0]["content"]
+    assert "user 消息来自乙方销售学员" in initial[0]["content"]
+    assert "opening" not in initial[0]["content"]
+    assert "你好，我们可以先聊聊。" not in initial[0]["content"]
+    assert initial[1]["content"] == first["content"]
+    second = {"agent": "customer", "content": "你们目前怎么管理客户信息？", "request_id": "identity-second"}
+    assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=second).text
+    history = provider["requests"][-1]["messages"]
+    assert [m["role"] for m in history] == ["system", "user", "assistant", "user"]
+    assert history[1]["content"] == first["content"]
+    assert history[2]["content"] == "我们主要使用表格，客户交接时有遗漏。"
+    assert history[3]["content"] == second["content"]
 
 
 def test_preparation_checks_budget_before_sending_business_manual(make_client, provider):

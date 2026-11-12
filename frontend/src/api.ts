@@ -29,7 +29,6 @@ export interface Practice {
     person?: string;
     role?: string;
     introduction?: string;
-    opening?: string;
   };
   report: string;
   report_status: string;

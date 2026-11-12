@@ -545,7 +545,7 @@ function App() {
       </React.Fragment>
     );
   }
-  /** 绘制指定 Agent 的独立消息列表与本轮流式内容。 */
+  /** 仅绘制实际保存的对话与当前流式内容，开练时保持聊天为空。 */
   function messages(agent: string) {
     const items = [];
     for (const exchange of active?.exchanges || [])
@@ -559,12 +559,6 @@ function App() {
         aria-live="polite"
         aria-relevant="additions text"
       >
-        {agent === "customer" && active?.scenario.opening && (
-          <article className="message">
-            <div className="message-label">{active.scenario.person}</div>
-            <div className="message-text">{active.scenario.opening}</div>
-          </article>
-        )}
         {items}
         {live?.agent === agent && (
           <>
