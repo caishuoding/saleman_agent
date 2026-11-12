@@ -1,0 +1,1809 @@
+<!-- 云序 CRM 产品界面演示，配合产品介绍书使用。功能与数据均为虚构训练设定。 -->
+<style>
+  #yunxu-crm {
+    color-scheme: light dark;
+    --yx-bg: light-dark(#f4f6fa, #111722);
+    --yx-paper: light-dark(#fff, #1b2230);
+    --yx-ink: light-dark(#253044, #e7edf8);
+    --yx-sub: light-dark(#647087, #a6b3c8);
+    --yx-line: light-dark(#e4e8ef, #344054);
+    --yx-brand: light-dark(#6652bd, #b5a4ff);
+    --yx-tint: light-dark(#eeebfa, #30284e);
+    --yx-green: light-dark(#22765b, #7ad5b2);
+    --yx-red: light-dark(#aa3744, #ff9fa8);
+    font-family: "Geist", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--yx-ink);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  #yunxu-crm * {
+    box-sizing: border-box;
+  }
+  #yunxu-crm [hidden] {
+    display: none !important;
+  }
+  #yunxu-crm button,
+  #yunxu-crm input,
+  #yunxu-crm select,
+  #yunxu-crm textarea {
+    font: inherit;
+  }
+  #yunxu-crm button {
+    cursor: pointer;
+  }
+  #yunxu-crm button:focus-visible,
+  #yunxu-crm input:focus-visible,
+  #yunxu-crm select:focus-visible,
+  #yunxu-crm textarea:focus-visible {
+    outline: 3px solid var(--yx-brand);
+    outline-offset: 3px;
+  }
+  #yunxu-crm h1,
+  #yunxu-crm h2,
+  #yunxu-crm h3,
+  #yunxu-crm p {
+    margin: 0;
+  }
+  #yunxu-crm h1 {
+    font-size: 23px;
+    line-height: 1.3;
+    font-weight: 650;
+  }
+  #yunxu-crm h2 {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  #yunxu-crm h3 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  #yunxu-crm .yx-shell {
+    display: grid;
+    grid-template-columns: 153px minmax(0, 1fr);
+    min-height: 748px;
+    border: 1px solid var(--yx-line);
+    border-radius: 14px;
+    overflow: clip;
+    background: var(--yx-bg);
+    position: relative;
+  }
+  #yunxu-crm .yx-rail {
+    background: var(--yx-paper);
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    border-right: 1px solid var(--yx-line);
+  }
+  #yunxu-crm .yx-logo {
+    padding: 0 9px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    white-space: nowrap;
+    font-size: 18px;
+    font-weight: 650;
+  }
+  #yunxu-crm .yx-mark {
+    width: 25px;
+    height: 27px;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    background: var(--yx-brand);
+    color: light-dark(#fff, #221947);
+  }
+  #yunxu-crm nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  #yunxu-crm .yx-nav {
+    border: 0;
+    border-radius: 7px;
+    color: var(--yx-sub);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 13px;
+    text-align: left;
+  }
+  #yunxu-crm .yx-nav[aria-current="page"] {
+    color: var(--yx-brand);
+    background: var(--yx-tint);
+    font-weight: 600;
+  }
+  #yunxu-crm .yx-account {
+    margin-top: auto;
+    padding: 14px 7px 0;
+    border-top: 1px solid var(--yx-line);
+  }
+  #yunxu-crm .yx-muted {
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-small {
+    font-size: 11px;
+  }
+  #yunxu-crm .yx-avatar {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--yx-brand);
+    background: var(--yx-tint);
+    font-size: 11px;
+  }
+  #yunxu-crm .yx-main {
+    min-width: 0;
+  }
+  #yunxu-crm .yx-top {
+    padding: 15px 108px 15px 25px;
+    min-height: 63px;
+    background: var(--yx-paper);
+    border-bottom: 1px solid var(--yx-line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  #yunxu-crm .yx-top label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 11px;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-role {
+    max-width: 150px;
+    border: 0;
+    background: var(--yx-paper);
+    color: var(--yx-ink);
+    font-size: 12px;
+  }
+  #yunxu-crm .yx-page {
+    padding: 26px 24px;
+  }
+  #yunxu-crm .yx-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  #yunxu-crm .yx-heading .yx-muted {
+    margin-top: 5px;
+  }
+  #yunxu-crm .yx-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #yunxu-crm .yx-button {
+    padding: 8px 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid var(--yx-line);
+    border-radius: 7px;
+    color: var(--yx-ink);
+    background: var(--yx-paper);
+    white-space: nowrap;
+  }
+  #yunxu-crm .yx-button.primary {
+    color: light-dark(#fff, #221947);
+    background: var(--yx-brand);
+    border-color: var(--yx-brand);
+  }
+  #yunxu-crm .yx-button.quiet {
+    border-color: transparent;
+    background: transparent;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-button.danger {
+    color: var(--yx-red);
+  }
+  #yunxu-crm .yx-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 21px;
+  }
+  #yunxu-crm .yx-field,
+  #yunxu-crm .yx-select {
+    border: 1px solid var(--yx-line);
+    background: var(--yx-paper);
+    color: var(--yx-ink);
+    border-radius: 7px;
+    padding: 9px 11px;
+    min-width: 0;
+    max-width: 100%;
+  }
+  #yunxu-crm .yx-field {
+    width: 100%;
+  }
+  #yunxu-crm .yx-filters label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #yunxu-crm .yx-board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 11px;
+  }
+  #yunxu-crm .yx-column {
+    min-width: 0;
+    background: light-dark(#edf0f5, #202a3a);
+    border-radius: 9px;
+    padding: 12px 9px;
+    min-height: 430px;
+  }
+  #yunxu-crm .yx-column-head {
+    padding: 0 3px 13px;
+    border-top: 3px solid var(--yx-brand);
+    padding-top: 10px;
+  }
+  #yunxu-crm .yx-column-head.won {
+    border-color: var(--yx-green);
+  }
+  #yunxu-crm .yx-column-head.lost {
+    border-color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-column-head h3 {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    font-size: 12px;
+  }
+  #yunxu-crm .yx-column-head p {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-deal {
+    text-align: left;
+    width: 100%;
+    border: 1px solid var(--yx-line);
+    background: var(--yx-paper);
+    color: var(--yx-ink);
+    border-radius: 7px;
+    padding: 13px 11px;
+    margin: 0 0 10px;
+  }
+  #yunxu-crm .yx-deal:hover {
+    border-color: var(--yx-brand);
+  }
+  #yunxu-crm .yx-deal strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  #yunxu-crm .yx-deal .yx-value {
+    display: block;
+    font-size: 17px;
+    margin: 13px 0;
+    font-weight: 600;
+  }
+  #yunxu-crm .yx-deal-foot {
+    border-top: 1px solid var(--yx-line);
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-empty {
+    padding: 25px 8px;
+    text-align: center;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-table-wrap {
+    overflow: auto;
+    background: var(--yx-paper);
+    border: 1px solid var(--yx-line);
+    border-radius: 10px;
+  }
+  #yunxu-crm table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    font-size: 12px;
+  }
+  #yunxu-crm th,
+  #yunxu-crm td {
+    padding: 14px 13px;
+    border-bottom: 1px solid var(--yx-line);
+    vertical-align: top;
+  }
+  #yunxu-crm th {
+    background: light-dark(#f8f9fc, #252f40);
+    font-size: 11px;
+    color: var(--yx-sub);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  #yunxu-crm tr:last-child td {
+    border-bottom: 0;
+  }
+  #yunxu-crm .yx-link {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--yx-brand);
+    text-align: left;
+    font: inherit;
+  }
+  #yunxu-crm .yx-tag {
+    display: inline-block;
+    color: var(--yx-brand);
+    background: var(--yx-tint);
+    border-radius: 5px;
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+  #yunxu-crm .yx-tag.done {
+    color: var(--yx-green);
+    background: light-dark(#e9f5ee, #173a32);
+  }
+  #yunxu-crm .yx-back {
+    margin-bottom: 18px;
+  }
+  #yunxu-crm .yx-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 255px;
+    gap: 20px;
+  }
+  #yunxu-crm .yx-panel {
+    border: 1px solid var(--yx-line);
+    border-radius: 10px;
+    background: var(--yx-paper);
+    padding: 21px;
+    min-width: 0;
+  }
+  #yunxu-crm .yx-panel + .yx-panel {
+    margin-top: 18px;
+  }
+  #yunxu-crm .yx-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+    margin: 0;
+  }
+  #yunxu-crm .yx-facts dt {
+    color: var(--yx-sub);
+    font-size: 11px;
+  }
+  #yunxu-crm .yx-facts dd {
+    margin: 5px 0 0;
+  }
+  #yunxu-crm .yx-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 17px;
+  }
+  #yunxu-crm .yx-label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 12px;
+  }
+  #yunxu-crm textarea {
+    min-height: 82px;
+    resize: vertical;
+  }
+  #yunxu-crm .yx-timeline {
+    border-left: 1px solid var(--yx-line);
+    margin: 20px 0 0 5px;
+    padding-left: 18px;
+  }
+  #yunxu-crm .yx-event {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  #yunxu-crm .yx-event:before {
+    content: "";
+    position: absolute;
+    left: -23px;
+    top: 7px;
+    height: 8px;
+    width: 8px;
+    background: var(--yx-brand);
+    border-radius: 50%;
+  }
+  #yunxu-crm .yx-event p {
+    margin-top: 6px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  #yunxu-crm .yx-task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--yx-line);
+  }
+  #yunxu-crm .yx-task:last-child {
+    border-bottom: 0;
+  }
+  #yunxu-crm .yx-task label {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+  }
+  #yunxu-crm .yx-task input {
+    accent-color: var(--yx-brand);
+    margin-top: 5px;
+  }
+  #yunxu-crm .yx-completed {
+    text-decoration: line-through;
+    color: var(--yx-sub);
+  }
+  #yunxu-crm .yx-chart {
+    display: grid;
+    gap: 18px;
+    margin-top: 24px;
+  }
+  #yunxu-crm .yx-bar-row {
+    display: grid;
+    grid-template-columns: 75px minmax(0, 1fr) 24px;
+    gap: 14px;
+    align-items: center;
+  }
+  #yunxu-crm .yx-track {
+    height: 23px;
+    background: var(--yx-bg);
+    border-radius: 4px;
+  }
+  #yunxu-crm .yx-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--yx-brand);
+  }
+  #yunxu-crm .yx-report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  #yunxu-crm .yx-notice {
+    margin: 0 24px 15px;
+    padding: 10px 14px;
+    color: var(--yx-green);
+    background: light-dark(#eaf5ef, #17342c);
+    border-radius: 7px;
+  }
+  #yunxu-crm .yx-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: light-dark(#20273c55, #0009);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 85px 20px 25px;
+  }
+  #yunxu-crm .yx-modal {
+    background: var(--yx-paper);
+    border: 1px solid var(--yx-line);
+    border-radius: 13px;
+    padding: 25px;
+    width: 480px;
+    max-width: 100%;
+    box-shadow: 0 18px 70px #0002;
+  }
+  #yunxu-crm .yx-modal p {
+    margin-top: 8px;
+  }
+  #yunxu-crm .yx-modal .yx-actions {
+    margin-top: 18px;
+    justify-content: flex-end;
+  }
+  #yunxu-crm .yx-import {
+    margin: 18px 0;
+    padding: 15px;
+    border: 1px dashed var(--yx-line);
+    border-radius: 8px;
+  }
+  #yunxu-crm .yx-error {
+    color: var(--yx-red);
+    font-size: 12px;
+  }
+  @media (max-width: 850px) {
+    #yunxu-crm .yx-shell {
+      grid-template-columns: 126px minmax(0, 1fr);
+    }
+    #yunxu-crm .yx-rail {
+      padding: 22px 8px;
+    }
+    #yunxu-crm .yx-logo {
+      padding: 0;
+      font-size: 16px;
+    }
+    #yunxu-crm .yx-page {
+      padding: 24px 17px;
+    }
+    #yunxu-crm .yx-board {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    #yunxu-crm .yx-column {
+      min-height: 220px;
+    }
+    #yunxu-crm .yx-detail {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 580px) {
+    #yunxu-crm .yx-shell {
+      display: block;
+    }
+    #yunxu-crm .yx-rail {
+      padding: 16px;
+      border-right: 0;
+      border-bottom: 1px solid var(--yx-line);
+      gap: 15px;
+    }
+    #yunxu-crm nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    #yunxu-crm .yx-nav {
+      padding: 8px 10px;
+    }
+    #yunxu-crm .yx-account {
+      display: none;
+    }
+    #yunxu-crm .yx-top {
+      padding: 13px 17px;
+    }
+    #yunxu-crm .yx-board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #yunxu-crm .yx-report-grid {
+      grid-template-columns: 1fr;
+    }
+    #yunxu-crm .yx-facts {
+      grid-template-columns: 1fr;
+    }
+    #yunxu-crm .yx-modal {
+      padding: 20px;
+    }
+    #yunxu-crm th,
+    #yunxu-crm td {
+      padding: 12px;
+    }
+  }
+  @media (pointer: coarse) {
+    #yunxu-crm button {
+      min-height: 44px;
+    }
+    #yunxu-crm input,
+    #yunxu-crm select,
+    #yunxu-crm textarea {
+      font-size: 16px;
+    }
+  }
+</style>
+<div id="yunxu-crm" aria-label="云序 CRM 产品界面演示"></div>
+<script>
+  // 展示虚构 CRM 的业务操作，所有更改仅作用于演示记录。
+  (function initializeYunxuCRM() {
+    const root = document.getElementById("yunxu-crm");
+    const stageNames = ["需求确认", "方案沟通", "商务确认", "已成交", "已流失"];
+    const navItems = [
+      ["deals", "商机", "columns-3"],
+      ["leads", "线索", "inbox"],
+      ["accounts", "客户", "building-2"],
+      ["tasks", "跟进任务", "list-checks"],
+      ["reports", "报表", "chart-no-axes-combined"],
+      ["settings", "权限与规则", "settings-2"],
+    ];
+    const roleNames = {
+      admin: "系统管理员",
+      manager: "团队负责人",
+      member: "普通成员",
+    };
+    const initial = {
+      version: 1,
+      revision: 0,
+      page: "deals",
+      role: "admin",
+      selectedDeal: 1,
+      selectedAccount: 1,
+      stageFilter: "all",
+      leadFilter: "all",
+      taskFilter: "todo",
+      accountFilter: "all",
+      modal: null,
+      importStep: 0,
+      notice: "",
+      accounts: [
+        {
+          id: 1,
+          name: "澄明科技",
+          industry: "企业服务",
+          owner: "陈舟",
+          team: "一组",
+          contact: "许宁",
+          title: "项目负责人",
+          email: "xuning@example.com",
+          phone: "13800001001",
+        },
+        {
+          id: 2,
+          name: "和越咨询",
+          industry: "专业服务",
+          owner: "林可",
+          team: "一组",
+          contact: "宋悦",
+          title: "运营负责人",
+          email: "songyue@example.com",
+          phone: "13800001002",
+        },
+        {
+          id: 3,
+          name: "启辰设备",
+          industry: "制造业",
+          owner: "周言",
+          team: "二组",
+          contact: "顾青",
+          title: "采购负责人",
+          email: "guqing@example.com",
+          phone: "13800001003",
+        },
+        {
+          id: 4,
+          name: "观岚软件",
+          industry: "软件服务",
+          owner: "陈舟",
+          team: "一组",
+          contact: "陆明",
+          title: "业务负责人",
+          email: "luming@example.com",
+          phone: "13800001004",
+        },
+        {
+          id: 5,
+          name: "泊远物流",
+          industry: "物流",
+          owner: "林可",
+          team: "一组",
+          contact: "沈桐",
+          title: "项目负责人",
+          email: "shentong@example.com",
+          phone: "13800001005",
+        },
+        {
+          id: 6,
+          name: "同序信息",
+          industry: "信息服务",
+          owner: "周言",
+          team: "二组",
+          contact: "叶禾",
+          title: "运营负责人",
+          email: "yehe@example.com",
+          phone: "13800001006",
+        },
+      ],
+      deals: [
+        {
+          id: 1,
+          account: 1,
+          name: "客户管理系统升级",
+          amount: 30960,
+          stage: 0,
+          owner: "陈舟",
+          team: "一组",
+          closeDate: "2026-12-10",
+          seats: 20,
+          reason: "",
+        },
+        {
+          id: 2,
+          account: 2,
+          name: "项目客户协作规范化",
+          amount: 46440,
+          stage: 0,
+          owner: "林可",
+          team: "一组",
+          closeDate: "2026-12-18",
+          seats: 30,
+          reason: "",
+        },
+        {
+          id: 3,
+          account: 3,
+          name: "渠道客户统一管理",
+          amount: 23220,
+          stage: 1,
+          owner: "周言",
+          team: "二组",
+          closeDate: "2026-12-15",
+          seats: 15,
+          reason: "",
+        },
+        {
+          id: 4,
+          account: 4,
+          name: "CRM 首期采购",
+          amount: 61920,
+          stage: 1,
+          owner: "陈舟",
+          team: "一组",
+          closeDate: "2026-11-28",
+          seats: 40,
+          reason: "",
+        },
+        {
+          id: 5,
+          account: 5,
+          name: "客户跟进流程试点",
+          amount: 15480,
+          stage: 2,
+          owner: "林可",
+          team: "一组",
+          closeDate: "2026-11-25",
+          seats: 10,
+          reason: "",
+        },
+        {
+          id: 6,
+          account: 6,
+          name: "CRM 标准版年度订阅",
+          amount: 38700,
+          stage: 3,
+          owner: "周言",
+          team: "二组",
+          closeDate: "2026-11-10",
+          seats: 25,
+          reason: "",
+        },
+      ],
+      leads: [
+        {
+          id: 1,
+          name: "温乔",
+          company: "星野设计",
+          contact: "wenqiao@example.com",
+          source: "线上活动",
+          status: "待联系",
+          owner: "陈舟",
+          team: "一组",
+        },
+        {
+          id: 2,
+          name: "程一",
+          company: "衡远工程",
+          contact: "chengyi@example.com",
+          source: "官网咨询",
+          status: "跟进中",
+          owner: "林可",
+          team: "一组",
+        },
+        {
+          id: 3,
+          name: "唐意",
+          company: "千屿服务",
+          contact: "tangyi@example.com",
+          source: "合作转介",
+          status: "待联系",
+          owner: "周言",
+          team: "二组",
+        },
+      ],
+      tasks: [
+        {
+          id: 1,
+          deal: 1,
+          title: "确认客户信息交接的具体流程",
+          due: "2026-11-13",
+          done: false,
+        },
+        {
+          id: 2,
+          deal: 1,
+          title: "整理首次沟通记录",
+          due: "2026-11-12",
+          done: true,
+        },
+        {
+          id: 3,
+          deal: 3,
+          title: "发送渠道客户管理方案",
+          due: "2026-11-14",
+          done: false,
+        },
+        {
+          id: 4,
+          deal: 4,
+          title: "安排方案演示会议",
+          due: "2026-11-16",
+          done: false,
+        },
+        {
+          id: 5,
+          deal: 5,
+          title: "确认账号数量与付款安排",
+          due: "2026-11-13",
+          done: false,
+        },
+      ],
+      notes: [
+        {
+          id: 1,
+          deal: 1,
+          author: "陈舟",
+          date: "2026-11-12 10:30",
+          text: "客户希望统一各项目组的客户信息，先梳理现有表格和交接流程。下一步确认试点范围。",
+        },
+        {
+          id: 2,
+          deal: 1,
+          author: "陈舟",
+          date: "2026-11-10 14:00",
+          text: "首次联系，客户愿意安排一次需求沟通，预计有20名使用人员。",
+        },
+      ],
+      rules: [
+        {
+          id: 1,
+          name: "商机长期未跟进",
+          condition: "连续 7 天没有新增跟进记录",
+          action: "通知商机负责人",
+          enabled: true,
+        },
+        {
+          id: 2,
+          name: "任务到期提醒",
+          condition: "任务截止日期到达",
+          action: "向任务负责人发送站内通知",
+          enabled: true,
+        },
+      ],
+    };
+    let state = JSON.parse(JSON.stringify(initial));
+    const saved = window.openai?.widgetState?.privateContent;
+    if (saved?.version === 1 && Array.isArray(saved.deals))
+      state = { ...state, ...saved, modal: null, notice: "" };
+    let focusBeforeModal = null;
+    // 转义文本及属性中的特殊字符，避免录入内容改变界面结构。
+    function esc(value) {
+      const element = document.createElement("span");
+      element.textContent = String(value ?? "");
+      return element.innerHTML
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+    // 生成由宿主提供的装饰图标。
+    function icon(name) {
+      return '<i data-lucide="' + name + '" aria-hidden="true"></i>';
+    }
+    // 创建具有具体业务动作和可访问名称的按钮。
+    function button(text, action, kind = "", attributes = "") {
+      return (
+        '<button type="button" class="yx-button ' +
+        kind +
+        '" data-action="' +
+        action +
+        '" ' +
+        attributes +
+        ">" +
+        text +
+        "</button>"
+      );
+    }
+    // 将演示金额统一显示为人民币整数格式。
+    function money(value) {
+      return "¥" + Number(value).toLocaleString("zh-CN");
+    }
+    // 根据标识查找同一份共享业务记录。
+    function find(collection, id) {
+      for (const item of state[collection])
+        if (item.id === Number(id)) return item;
+      return null;
+    }
+    // 根据演示角色决定记录可见范围。
+    function visible(record) {
+      return (
+        state.role === "admin" ||
+        (state.role === "manager" && record.team === "一组") ||
+        record.owner === "陈舟"
+      );
+    }
+    // 过滤出符合角色权限的记录，供所有页面和报表共用。
+    function records(collection) {
+      const result = [];
+      for (const item of state[collection])
+        if (visible(item)) result.push(item);
+      return result;
+    }
+    // 获取当前选定且在权限范围内的商机。
+    function currentDeal() {
+      const deal = find("deals", state.selectedDeal);
+      return deal && visible(deal) ? deal : null;
+    }
+    // 持久化可恢复的演示状态，不调用真实 CRM 或外部业务接口。
+    function remember() {
+      if (!window.openai?.setWidgetState) return;
+      state.revision++;
+      window.openai
+        .setWidgetState({
+          modelContent: {
+            product: "云序 CRM",
+            page: state.page,
+            role: roleNames[state.role],
+          },
+          privateContent: JSON.parse(JSON.stringify(state)),
+        })
+        .catch(
+          /* 宿主保存不可用时保留内存中的演示状态。 */ function ignoreSaveFailure() {},
+        );
+    }
+    // 绘制页面标题、数据概况和当前模块主操作。
+    function heading(title, subtitle, actions = "") {
+      return (
+        '<div class="yx-heading"><div><h1>' +
+        title +
+        '</h1><p class="yx-muted">' +
+        subtitle +
+        '</p></div><div class="yx-actions">' +
+        actions +
+        "</div></div>"
+      );
+    }
+    // 生成选择器，保留所选值并为原生控件提供标签。
+    function select(label, key, options, value) {
+      let html = "";
+      for (const item of options)
+        html +=
+          '<option value="' +
+          esc(item[0]) +
+          '" ' +
+          (String(value) === String(item[0]) ? "selected" : "") +
+          ">" +
+          esc(item[1]) +
+          "</option>";
+      return (
+        "<label>" +
+        label +
+        '<select class="yx-select" data-filter="' +
+        key +
+        '">' +
+        html +
+        "</select></label>"
+      );
+    }
+    // 商机看板按实际记录聚合阶段、数量与金额。
+    function dealsPage() {
+      const available = records("deals");
+      let active = 0;
+      for (const deal of available) if (deal.stage < 3) active += deal.amount;
+      let columns = "";
+      for (let stage = 0; stage < 5; stage++) {
+        if (state.stageFilter !== "all" && Number(state.stageFilter) !== stage)
+          continue;
+        let count = 0;
+        let total = 0;
+        let cards = "";
+        for (const deal of available)
+          if (deal.stage === stage) {
+            count++;
+            total += deal.amount;
+            const account = find("accounts", deal.account);
+            cards +=
+              '<button type="button" class="yx-deal" data-action="open-deal" data-id="' +
+              deal.id +
+              '"><strong>' +
+              esc(account.name) +
+              '</strong><span class="yx-small yx-muted">' +
+              esc(deal.name) +
+              '</span><span class="yx-value">' +
+              money(deal.amount) +
+              '</span><span class="yx-deal-foot"><span>' +
+              deal.closeDate.slice(5) +
+              ' 预计成交</span><span class="yx-avatar" aria-label="负责人' +
+              deal.owner +
+              '">' +
+              deal.owner[0] +
+              "</span></span></button>";
+          }
+        columns +=
+          '<section class="yx-column"><div class="yx-column-head ' +
+          (stage === 3 ? "won" : stage === 4 ? "lost" : "") +
+          '"><h3>' +
+          stageNames[stage] +
+          "<span>" +
+          count +
+          "</span></h3><p>" +
+          money(total) +
+          "</p></div>" +
+          (cards || '<div class="yx-empty yx-small">暂无商机</div>') +
+          "</section>";
+      }
+      const options = [["all", "全部阶段"]];
+      for (let stage = 0; stage < 5; stage++)
+        options.push([String(stage), stageNames[stage]]);
+      return (
+        heading(
+          "商机",
+          available.length + " 个商机，待推进金额 " + money(active),
+        ) +
+        '<div class="yx-filters">' +
+        select("阶段", "stageFilter", options, state.stageFilter) +
+        '</div><div class="yx-board">' +
+        columns +
+        "</div>"
+      );
+    }
+    // 绘制当前商机关联的任务，列表与详情使用同一个完成状态。
+    function taskRows(dealId = null) {
+      let html = "";
+      for (const task of state.tasks) {
+        const deal = find("deals", task.deal);
+        if (
+          !deal ||
+          !visible(deal) ||
+          (dealId !== null && task.deal !== dealId)
+        )
+          continue;
+        if (dealId === null && state.taskFilter === "todo" && task.done)
+          continue;
+        if (dealId === null && state.taskFilter === "done" && !task.done)
+          continue;
+        html +=
+          '<div class="yx-task"><label><input type="checkbox" data-task="' +
+          task.id +
+          '" ' +
+          (task.done ? "checked" : "") +
+          ' aria-label="完成任务' +
+          esc(task.title) +
+          '"><span><span class="' +
+          (task.done ? "yx-completed" : "") +
+          '">' +
+          esc(task.title) +
+          '</span><br><span class="yx-small yx-muted">' +
+          task.due +
+          " · " +
+          esc(deal.owner) +
+          " · " +
+          esc(find("accounts", deal.account).name) +
+          "</span></span></label></div>";
+      }
+      return html || '<div class="yx-empty">暂无匹配任务</div>';
+    }
+    // 按记录时间从新到旧排列跟进，同一时间用稳定标识确定顺序。
+    function compareNoteDates(left, right) {
+      return right.date.localeCompare(left.date) || right.id - left.id;
+    }
+    // 商机详情提供阶段更新、按时间排列的跟进记录与关联任务。
+    function dealPage() {
+      const deal = currentDeal();
+      if (!deal) return dealsPage();
+      const account = find("accounts", deal.account);
+      let stages = "";
+      for (let stage = 0; stage < 5; stage++)
+        stages +=
+          '<option value="' +
+          stage +
+          '" ' +
+          (deal.stage === stage ? "selected" : "") +
+          ">" +
+          stageNames[stage] +
+          "</option>";
+      const dealNotes = [];
+      for (const note of state.notes)
+        if (note.deal === deal.id) dealNotes.push(note);
+      dealNotes.sort(compareNoteDates);
+      let notes = "";
+      for (const note of dealNotes)
+        notes +=
+          '<div class="yx-event"><span class="yx-small yx-muted">' +
+          esc(note.author) +
+          " · " +
+          esc(note.date) +
+          "</span><p>" +
+          esc(note.text) +
+          "</p></div>";
+      return (
+        '<div class="yx-back">' +
+        button(icon("arrow-left") + "商机看板", "back-deals", "quiet") +
+        "</div>" +
+        heading(
+          esc(deal.name),
+          esc(account.name) + " · " + deal.seats + " 个账号 · 云序 CRM 标准版",
+        ) +
+        '<div class="yx-detail"><div><section class="yx-panel"><h2>跟进记录</h2><div class="yx-form"><label class="yx-label">新增沟通记录<textarea class="yx-field" id="yx-note" maxlength="1000" placeholder="记录沟通结论和下一步安排"></textarea></label><div class="yx-actions">' +
+        button("保存记录", "save-note", "primary") +
+        '</div></div><div class="yx-timeline">' +
+        (notes || '<p class="yx-muted">暂无跟进记录</p>') +
+        '</div></section><section class="yx-panel"><div class="yx-heading"><h2>关联任务</h2>' +
+        button("新建任务", "new-task") +
+        "</div>" +
+        taskRows(deal.id) +
+        '</section></div><aside><section class="yx-panel"><h2>商机信息</h2><div class="yx-form"><label class="yx-label">阶段<select class="yx-select" id="yx-stage">' +
+        stages +
+        '</select></label><label class="yx-label">预估金额<input class="yx-field" id="yx-amount" type="number" min="0" max="999999999" required value="' +
+        deal.amount +
+        '"></label><label class="yx-label">预计成交日期<input class="yx-field" id="yx-close" type="date" required value="' +
+        deal.closeDate +
+        '"></label><label class="yx-label" id="yx-loss-label" ' +
+        (deal.stage === 4 ? "" : "hidden") +
+        '>流失原因<textarea class="yx-field" id="yx-loss" maxlength="300">' +
+        esc(deal.reason) +
+        "</textarea></label>" +
+        button("保存商机", "save-deal", "primary") +
+        '</div></section><section class="yx-panel"><h3>客户与负责人</h3><p style="margin:12px 0">' +
+        button(
+          esc(account.name),
+          "open-account",
+          "quiet",
+          'data-id="' + account.id + '"',
+        ) +
+        "</p><p>" +
+        esc(account.contact) +
+        " · " +
+        esc(account.title) +
+        '</p><p class="yx-small yx-muted" style="margin-top:10px">内部负责人 ' +
+        deal.owner +
+        "<br>所属团队 " +
+        deal.team +
+        "</p></section></aside></div>"
+      );
+    }
+    // 绘制线索列表，支持状态筛选、新建、示例导入与转化。
+    function leadsPage() {
+      let rows = "";
+      const available = records("leads");
+      for (const lead of available) {
+        if (state.leadFilter !== "all" && lead.status !== state.leadFilter)
+          continue;
+        rows +=
+          "<tr><td><strong>" +
+          esc(lead.name) +
+          '</strong><br><span class="yx-small yx-muted">' +
+          esc(lead.contact) +
+          "</span></td><td>" +
+          esc(lead.company) +
+          "</td><td>" +
+          esc(lead.source) +
+          '</td><td><span class="yx-tag ' +
+          (lead.status === "已转化" ? "done" : "") +
+          '">' +
+          lead.status +
+          "</span></td><td>" +
+          lead.owner +
+          "</td><td>" +
+          (lead.status === "已转化"
+            ? "已建立客户与商机"
+            : button(
+                "转为商机",
+                "convert-lead",
+                "",
+                'data-id="' + lead.id + '"',
+              )) +
+          "</td></tr>";
+      }
+      return (
+        heading(
+          "线索",
+          available.length + " 条线索",
+          button("导入示例 CSV", "import-leads") +
+            button(icon("plus") + "新建线索", "new-lead", "primary"),
+        ) +
+        '<div class="yx-filters">' +
+        select(
+          "状态",
+          "leadFilter",
+          [
+            ["all", "全部状态"],
+            ["待联系", "待联系"],
+            ["跟进中", "跟进中"],
+            ["已转化", "已转化"],
+          ],
+          state.leadFilter,
+        ) +
+        '</div><div class="yx-table-wrap"><table><thead><tr><th>联系人</th><th>公司</th><th>来源</th><th>状态</th><th>负责人</th><th>操作</th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table></div>"
+      );
+    }
+    // 客户列表的可见范围与商机一致，进入详情查看关联信息。
+    function accountsPage() {
+      let rows = "";
+      for (const account of records("accounts")) {
+        let count = 0;
+        for (const deal of records("deals"))
+          if (deal.account === account.id) count++;
+        rows +=
+          '<tr><td><button type="button" class="yx-link" data-action="open-account" data-id="' +
+          account.id +
+          '">' +
+          esc(account.name) +
+          "</button></td><td>" +
+          esc(account.industry) +
+          "</td><td>" +
+          esc(account.contact) +
+          "</td><td>" +
+          esc(account.title) +
+          "</td><td>" +
+          account.owner +
+          "</td><td>" +
+          count +
+          "</td></tr>";
+      }
+      return (
+        heading("客户", records("accounts").length + " 个企业客户") +
+        '<div class="yx-table-wrap"><table><thead><tr><th>企业名称</th><th>行业</th><th>主要联系人</th><th>职务</th><th>负责人</th><th>商机</th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table></div>"
+      );
+    }
+    // 客户详情展示主要联系人与关联商机，可从商机继续查看任务与跟进。
+    function accountPage() {
+      const account = find("accounts", state.selectedAccount);
+      if (!account || !visible(account)) return accountsPage();
+      let related = "";
+      for (const deal of records("deals"))
+        if (deal.account === account.id)
+          related +=
+            '<div class="yx-task"><div><button class="yx-link" data-action="open-deal" data-id="' +
+            deal.id +
+            '">' +
+            esc(deal.name) +
+            '</button><p class="yx-small yx-muted">' +
+            stageNames[deal.stage] +
+            " · " +
+            money(deal.amount) +
+            "</p></div></div>";
+      return (
+        '<div class="yx-back">' +
+        button(icon("arrow-left") + "客户列表", "back-accounts", "quiet") +
+        "</div>" +
+        heading(
+          esc(account.name),
+          esc(account.industry) + " · 内部负责人 " + account.owner,
+        ) +
+        '<div class="yx-detail"><section class="yx-panel"><h2>关联商机</h2>' +
+        related +
+        '</section><aside class="yx-panel"><h2>主要联系人</h2><dl class="yx-facts" style="grid-template-columns:1fr;margin-top:20px"><div><dt>姓名与职务</dt><dd>' +
+        esc(account.contact) +
+        " · " +
+        esc(account.title) +
+        '</dd></div><div><dt>电子邮箱</dt><dd style="overflow-wrap:anywhere">' +
+        esc(account.email || "待补充") +
+        "</dd></div><div><dt>联系电话</dt><dd>" +
+        esc(account.phone || "待补充") +
+        "</dd></div></dl></aside></div>"
+      );
+    }
+    // 按共享任务数据展示待办与已完成事项。
+    function tasksPage() {
+      return (
+        heading(
+          "跟进任务",
+          "按负责人和截止时间安排下一步",
+          button(icon("plus") + "新建任务", "new-task", "primary"),
+        ) +
+        '<div class="yx-filters">' +
+        select(
+          "状态",
+          "taskFilter",
+          [
+            ["todo", "未完成"],
+            ["done", "已完成"],
+            ["all", "全部任务"],
+          ],
+          state.taskFilter,
+        ) +
+        '</div><section class="yx-panel">' +
+        taskRows() +
+        "</section>"
+      );
+    }
+    // 使用当前可见商机实时计算阶段分布与金额报表。
+    function reportsPage() {
+      const counts = [0, 0, 0, 0, 0];
+      const totals = [0, 0, 0, 0, 0];
+      let max = 1;
+      for (const deal of records("deals")) {
+        counts[deal.stage]++;
+        totals[deal.stage] += deal.amount;
+        max = Math.max(max, counts[deal.stage]);
+      }
+      let bars = "";
+      let rows = "";
+      for (let stage = 0; stage < 5; stage++) {
+        bars +=
+          '<div class="yx-bar-row"><button type="button" class="yx-link" data-action="stage-report" data-id="' +
+          stage +
+          '">' +
+          stageNames[stage] +
+          '</button><div class="yx-track"><div class="yx-bar" style="width:' +
+          (counts[stage] / max) * 100 +
+          '%"></div></div><span>' +
+          counts[stage] +
+          "</span></div>";
+        rows +=
+          "<tr><td>" +
+          stageNames[stage] +
+          "</td><td>" +
+          counts[stage] +
+          "</td><td>" +
+          money(totals[stage]) +
+          "</td></tr>";
+      }
+      return (
+        heading("商机报表", "统计范围为当前角色可见的全部演示商机") +
+        '<div class="yx-report-grid"><section class="yx-panel"><h2>各阶段商机数量</h2><div class="yx-chart" role="group" aria-label="商机阶段分布，各阶段数量可见，点击阶段名称进入看板">' +
+        bars +
+        '</div></section><div class="yx-table-wrap"><table><thead><tr><th>阶段</th><th>数量</th><th>金额</th></tr></thead><tbody>' +
+        rows +
+        '</tbody></table></div></div><section class="yx-panel" style="margin-top:18px"><h3>统计口径</h3><p class="yx-muted" style="margin-top:10px">按当前保存的阶段计数，金额为商机中的预估金额之和。已成交、已流失单独列示。阶段和金额修改后，本页同步更新。</p></section>'
+      );
+    }
+    // 展示三种角色的数据范围及最多五条规则的标准版设定。
+    function settingsPage() {
+      let rules = "";
+      for (const rule of state.rules)
+        rules +=
+          '<div class="yx-task"><div><h3>' +
+          rule.name +
+          '</h3><p class="yx-small yx-muted">' +
+          rule.condition +
+          " → " +
+          rule.action +
+          "</p></div>" +
+          (state.role === "admin"
+            ? '<label><input type="checkbox" data-rule="' +
+              rule.id +
+              '" ' +
+              (rule.enabled ? "checked" : "") +
+              ' aria-label="启用' +
+              rule.name +
+              '">启用</label>'
+            : '<span class="yx-tag">' +
+              (rule.enabled ? "已启用" : "已停用") +
+              "</span>") +
+          "</div>";
+      return (
+        heading("权限与规则", "当前体验角色 " + roleNames[state.role]) +
+        '<section class="yx-panel"><h2>角色与数据范围</h2><div class="yx-table-wrap" style="margin-top:18px"><table><thead><tr><th>角色</th><th>记录范围</th><th>业务记录</th><th>提醒规则</th></tr></thead><tbody><tr><td>普通成员</td><td>本人负责</td><td>查看与维护本人记录</td><td>查看</td></tr><tr><td>团队负责人</td><td>本团队</td><td>查看与维护团队记录</td><td>查看</td></tr><tr><td>系统管理员</td><td>全公司</td><td>查看与维护全部记录</td><td>启用、停用</td></tr></tbody></table></div></section><section class="yx-panel"><h2>提醒规则</h2><p class="yx-small yx-muted">标准版已配置 2 / 5 条规则，通知渠道为站内通知。</p>' +
+        rules +
+        "</section>"
+      );
+    }
+    // 构建新增记录或导入演示的弹窗表单。
+    function modalContent() {
+      let title = "";
+      let body = "";
+      let action = "";
+      if (state.modal === "lead") {
+        title = "新建线索";
+        body =
+          '<label class="yx-label">联系人<input class="yx-field" name="lead-name" required maxlength="40"></label><label class="yx-label">公司<input class="yx-field" name="lead-company" required maxlength="60"></label><label class="yx-label">联系方式<input class="yx-field" name="lead-contact" required maxlength="100" placeholder="电话或邮箱"></label>';
+        action = button("保存线索", "save-lead", "primary");
+      }
+      if (state.modal === "task") {
+        title = "新建跟进任务";
+        let options = "";
+        for (const deal of records("deals"))
+          options +=
+            '<option value="' +
+            deal.id +
+            '" ' +
+            (deal.id === state.selectedDeal ? "selected" : "") +
+            ">" +
+            esc(find("accounts", deal.account).name) +
+            " · " +
+            esc(deal.name) +
+            "</option>";
+        body =
+          '<label class="yx-label">任务名称<input class="yx-field" name="task-title" required maxlength="100"></label><label class="yx-label">关联商机<select class="yx-select" name="task-deal">' +
+          options +
+          '</select></label><label class="yx-label">截止日期<input class="yx-field" name="task-due" type="date" required value="2026-11-16"></label>';
+        action = button("创建任务", "save-task", "primary");
+      }
+      if (state.modal === "import") {
+        title =
+          state.importStep === 0
+            ? "导入示例 CSV"
+            : state.importStep === 1
+              ? "确认字段映射"
+              : "导入结果";
+        if (state.importStep === 0) {
+          body =
+            '<div class="yx-import"><h3>客户线索示例.csv</h3><p class="yx-muted">3 行示例数据，包含联系人、公司和邮箱。</p></div><p class="yx-small yx-muted">使用内置示例展示导入流程。</p>';
+          action = button("下一步", "import-next", "primary");
+        }
+        if (state.importStep === 1) {
+          body =
+            '<div class="yx-table-wrap"><table><thead><tr><th>文件字段</th><th>线索字段</th></tr></thead><tbody><tr><td>客户姓名</td><td>联系人</td></tr><tr><td>企业名称</td><td>公司</td></tr><tr><td>联系邮箱</td><td>联系方式</td></tr></tbody></table></div><p class="yx-small yx-muted">校验必填字段，当前示例按电子邮箱检查重复。</p>';
+          action = button("校验并导入", "import-confirm", "primary");
+        }
+        if (state.importStep === 2) {
+          body =
+            "<h3>" +
+            esc(state.importResult || "导入已完成") +
+            '</h3><div class="yx-import"><p class="yx-error">第 4 行 · 联系方式为空</p><p class="yx-small yx-muted">该行未创建。补齐联系方式后，可重新导入。</p></div>';
+          action = button("完成", "close-modal", "primary");
+        }
+      }
+      return (
+        '<div class="yx-overlay"><section class="yx-modal" role="dialog" aria-modal="true" aria-labelledby="yx-modal-title"><h2 id="yx-modal-title">' +
+        title +
+        '</h2><div class="yx-form">' +
+        body +
+        '</div><div class="yx-actions">' +
+        (state.modal === "import" && state.importStep === 2
+          ? ""
+          : button("取消", "close-modal")) +
+        action +
+        "</div></section></div>"
+      );
+    }
+    // 渲染当前业务模块，保留全局角色入口和明确的演示标识。
+    function render() {
+      const page = state.page;
+      let content = "";
+      switch (page) {
+        case "leads":
+          content = leadsPage();
+          break;
+        case "accounts":
+          content = accountsPage();
+          break;
+        case "account":
+          content = accountPage();
+          break;
+        case "deal":
+          content = dealPage();
+          break;
+        case "tasks":
+          content = tasksPage();
+          break;
+        case "reports":
+          content = reportsPage();
+          break;
+        case "settings":
+          content = settingsPage();
+          break;
+        default:
+          content = dealsPage();
+      }
+      let nav = "";
+      for (const item of navItems)
+        nav +=
+          '<button type="button" class="yx-nav" data-action="navigate" data-page="' +
+          item[0] +
+          '" ' +
+          (page === item[0] ||
+          (page === "deal" && item[0] === "deals") ||
+          (page === "account" && item[0] === "accounts")
+            ? 'aria-current="page"'
+            : "") +
+          ">" +
+          icon(item[2]) +
+          item[1] +
+          "</button>";
+      let roles = "";
+      for (const key of ["admin", "manager", "member"])
+        roles +=
+          '<option value="' +
+          key +
+          '" ' +
+          (state.role === key ? "selected" : "") +
+          ">" +
+          roleNames[key] +
+          "</option>";
+      root.innerHTML =
+        '<div class="yx-shell"><aside class="yx-rail"><div class="yx-logo"><span class="yx-mark">' +
+        icon("layers-2") +
+        '</span>云序 CRM</div><nav aria-label="CRM 导航">' +
+        nav +
+        '</nav><div class="yx-account"><span class="yx-avatar">舟</span> 陈舟<p class="yx-small yx-muted" style="margin-top:7px">标准版 · 演示数据</p></div></aside><main class="yx-main"><header class="yx-top"><span class="yx-muted">云序软件演示企业</span><label>体验角色<select class="yx-role" id="yx-role">' +
+        roles +
+        '</select></label></header><div class="yx-page">' +
+        content +
+        "</div>" +
+        (state.notice
+          ? '<div class="yx-notice" role="status">' +
+            esc(state.notice) +
+            "</div>"
+          : "") +
+        "</main>" +
+        (state.modal ? modalContent() : "") +
+        "</div>";
+      if (globalThis.lucide)
+        lucide.createIcons({ attrs: { width: 17, height: 17 } });
+      if (state.modal)
+        root
+          .querySelector(
+            '.yx-modal input,.yx-modal [data-action="close-modal"]',
+          )
+          ?.focus();
+    }
+    // 获取表单输入并执行原生必填校验。
+    function field(name) {
+      const control = root.querySelector('[name="' + name + '"]');
+      if (!control || !control.reportValidity()) return null;
+      const value = control.value.trim();
+      if (!value) {
+        control.setCustomValidity("请填写此项");
+        control.reportValidity();
+        return null;
+      }
+      control.setCustomValidity("");
+      return value;
+    }
+    // 生成集合中的下一个稳定标识。
+    function nextId(collection) {
+      let id = 0;
+      for (const item of state[collection]) id = Math.max(id, item.id);
+      return id + 1;
+    }
+    // 处理业务操作，所有关联视图共同读取同一条演示记录。
+    function onClick(event) {
+      const trigger = event.target.closest("[data-action]");
+      if (!trigger || !root.contains(trigger)) return;
+      const action = trigger.dataset.action;
+      state.notice = "";
+      if (action === "navigate") state.page = trigger.dataset.page;
+      if (action === "open-deal") {
+        state.selectedDeal = Number(trigger.dataset.id);
+        state.page = "deal";
+      }
+      if (action === "open-account") {
+        state.selectedAccount = Number(trigger.dataset.id);
+        state.page = "account";
+      }
+      if (action === "back-deals") state.page = "deals";
+      if (action === "back-accounts") state.page = "accounts";
+      if (["new-lead", "new-task", "import-leads"].includes(action)) {
+        focusBeforeModal = { action, id: trigger.dataset.id };
+        state.modal =
+          action === "new-lead"
+            ? "lead"
+            : action === "new-task"
+              ? "task"
+              : "import";
+        state.importStep = 0;
+      }
+      if (action === "close-modal") state.modal = null;
+      if (action === "stage-report") {
+        state.stageFilter = trigger.dataset.id;
+        state.page = "deals";
+      }
+      if (action === "save-note") {
+        const input = root.querySelector("#yx-note");
+        const text = input.value.trim();
+        if (!text) {
+          input.focus();
+          return;
+        }
+        state.notes.push({
+          id: nextId("notes"),
+          deal: state.selectedDeal,
+          author: "陈舟",
+          date: new Intl.DateTimeFormat("sv-SE", {
+            timeZone: "Asia/Shanghai",
+            dateStyle: "short",
+            timeStyle: "short",
+          }).format(new Date()),
+          text,
+        });
+        state.notice = "跟进记录已保存";
+      }
+      if (action === "save-deal") {
+        const deal = currentDeal();
+        if (!deal) return;
+        const amount = root.querySelector("#yx-amount");
+        const close = root.querySelector("#yx-close");
+        const stage = Number(root.querySelector("#yx-stage").value);
+        const reason = root.querySelector("#yx-loss");
+        reason.required = stage === 4;
+        reason.setCustomValidity(
+          stage === 4 && !reason.value.trim() ? "请填写流失原因" : "",
+        );
+        if (
+          !amount.reportValidity() ||
+          !close.reportValidity() ||
+          !reason.reportValidity()
+        )
+          return;
+        deal.amount = Number(amount.value);
+        deal.closeDate = close.value;
+        deal.stage = stage;
+        deal.reason = stage === 4 ? reason.value.trim() : "";
+        state.notice = "商机信息已保存，报表同步更新";
+      }
+      if (action === "save-lead") {
+        const name = field("lead-name");
+        const company = field("lead-company");
+        const contact = field("lead-contact");
+        if (!name || !company || !contact) return;
+        state.leads.push({
+          id: nextId("leads"),
+          name,
+          company,
+          contact,
+          source: "手工录入",
+          status: "待联系",
+          owner: "陈舟",
+          team: "一组",
+        });
+        state.modal = null;
+        state.leadFilter = "all";
+        state.notice = "线索已创建";
+      }
+      if (action === "save-task") {
+        const title = field("task-title");
+        const due = field("task-due");
+        if (!title || !due) return;
+        const dealId = Number(root.querySelector('[name="task-deal"]').value);
+        const deal = find("deals", dealId);
+        if (!deal || !visible(deal)) return;
+        state.tasks.push({
+          id: nextId("tasks"),
+          deal: dealId,
+          title,
+          due,
+          done: false,
+        });
+        state.modal = null;
+        state.notice = "跟进任务已创建";
+      }
+      if (action === "convert-lead") {
+        const lead = find("leads", trigger.dataset.id);
+        if (!lead || !visible(lead) || lead.status === "已转化") return;
+        const accountId = nextId("accounts");
+        const dealId = nextId("deals");
+        state.accounts.push({
+          id: accountId,
+          name: lead.company,
+          industry: "待确认",
+          owner: lead.owner,
+          team: lead.team,
+          contact: lead.name,
+          title: "待确认",
+          email: lead.contact.includes("@") ? lead.contact : "",
+          phone: lead.contact.includes("@") ? "" : lead.contact,
+        });
+        state.deals.push({
+          id: dealId,
+          account: accountId,
+          name: lead.company + " CRM 需求沟通",
+          amount: 15480,
+          stage: 0,
+          owner: lead.owner,
+          team: lead.team,
+          closeDate: "2026-12-15",
+          seats: 10,
+          reason: "",
+        });
+        lead.status = "已转化";
+        state.notice = "已建立企业客户、联系人和商机，可在对应模块查看";
+      }
+      if (action === "import-next") state.importStep = 1;
+      if (action === "import-confirm") {
+        let added = 0;
+        for (const sample of [
+          { name: "季然", company: "知行咨询", contact: "jiran@example.com" },
+          { name: "叶澄", company: "佑禾设备", contact: "yecheng@example.com" },
+        ]) {
+          let duplicate = false;
+          for (const lead of state.leads)
+            if (lead.contact === sample.contact) duplicate = true;
+          if (!duplicate) {
+            state.leads.push({
+              id: nextId("leads"),
+              ...sample,
+              source: "表格导入",
+              status: "待联系",
+              owner: "陈舟",
+              team: "一组",
+            });
+            added++;
+          }
+        }
+        state.importResult =
+          "新增 " + added + " 条，跳过重复 " + (2 - added) + " 条，失败 1 条";
+        state.importStep = 2;
+        state.leadFilter = "all";
+      }
+      render();
+      remember();
+      if (action === "close-modal" && focusBeforeModal)
+        root
+          .querySelector('[data-action="' + focusBeforeModal.action + '"]')
+          ?.focus();
+    }
+    // 更新原生控件的筛选、角色、任务状态与规则开关。
+    function onChange(event) {
+      const control = event.target;
+      if (control.id === "yx-stage") {
+        root.querySelector("#yx-loss-label").hidden = control.value !== "4";
+        return;
+      }
+      if (control.id === "yx-role") {
+        state.role = control.value;
+        state.page = "deals";
+        state.notice = "";
+      } else if (control.dataset.filter)
+        state[control.dataset.filter] = control.value;
+      else if (control.dataset.task) {
+        const task = find("tasks", control.dataset.task);
+        const deal = task && find("deals", task.deal);
+        if (!deal || !visible(deal)) return;
+        task.done = control.checked;
+        state.notice = task.done ? "任务已完成" : "任务已恢复为未完成";
+      } else if (control.dataset.rule && state.role === "admin") {
+        const rule = find("rules", control.dataset.rule);
+        rule.enabled = control.checked;
+        state.notice = "规则状态已更新";
+      } else return;
+      render();
+      remember();
+    }
+    // 清除已修正输入的校验提示，保证空白提交后仍可继续填写。
+    function onInput(event) {
+      if (event.target.matches("input,textarea"))
+        event.target.setCustomValidity("");
+    }
+    // 弹窗支持 Escape 关闭与 Tab 焦点循环。
+    function onKeydown(event) {
+      if (!state.modal) return;
+      if (event.key === "Escape") {
+        state.modal = null;
+        render();
+        if (focusBeforeModal)
+          root
+            .querySelector('[data-action="' + focusBeforeModal.action + '"]')
+            ?.focus();
+        return;
+      }
+      if (event.key === "Tab") {
+        const controls = root.querySelectorAll(
+          ".yx-modal input,.yx-modal select,.yx-modal button",
+        );
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+    // 仅接受更新的宿主状态，防止旧快照覆盖刚完成的操作。
+    function onGlobals(event) {
+      const next = event.detail?.globals?.widgetState?.privateContent;
+      if (
+        next?.version === 1 &&
+        next.revision > state.revision &&
+        Array.isArray(next.deals)
+      ) {
+        state = { ...state, ...next };
+        render();
+      }
+    }
+    root.addEventListener("click", onClick);
+    root.addEventListener("change", onChange);
+    root.addEventListener("input", onInput);
+    root.addEventListener("keydown", onKeydown);
+    window.addEventListener("openai:set_globals", onGlobals);
+    render();
+  })();
+</script>

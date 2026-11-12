@@ -1,0 +1,473 @@
+<!-- 销售培训界面原型：比较侧栏工作台与顶部导航两种布局，示例数据仅存于内存。 -->
+<style>
+#sales-prototype { color-scheme:light dark; font-family:"Inter","PingFang SC","Microsoft YaHei",sans-serif; color:light-dark(#202a37,#e7edf5); --paper:light-dark(#fff,#171e29); --canvas:light-dark(#f3f6fa,#101620); --line:light-dark(#e3e9f0,#303b4a); --ink:light-dark(#202a37,#e7edf5); --sub:light-dark(#637185,#a4b3c6); --brand:light-dark(#245cbe,#84b0ff); --soft:light-dark(#eaf1ff,#203455); --bubble:light-dark(#f0f3f7,#26303e); --good:light-dark(#21775e,#7dd8b5); font-size:14px; line-height:1.65; }
+#sales-prototype * { box-sizing:border-box; }
+#sales-prototype [hidden] { display:none!important; }
+#sales-prototype button,#sales-prototype textarea { font:inherit; }
+#sales-prototype button { cursor:pointer; }
+#sales-prototype button:focus-visible,#sales-prototype textarea:focus-visible { outline:3px solid var(--brand); outline-offset:3px; }
+#sales-prototype .app { background:var(--canvas); min-height:700px; border:1px solid var(--line); border-radius:16px; overflow:clip; position:relative; display:grid; grid-template-columns:174px minmax(0,1fr); }
+#sales-prototype .rail { background:var(--paper); padding:26px 14px; border-right:1px solid var(--line); display:flex; flex-direction:column; gap:26px; }
+#sales-prototype .brand { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:650; padding:0 9px; white-space:nowrap; }
+#sales-prototype .brand-mark { width:27px; height:30px; display:grid; place-items:center; background:var(--brand); color:var(--paper); border-radius:8px 8px 8px 2px; }
+#sales-prototype .rail nav { display:flex; flex-direction:column; gap:7px; }
+#sales-prototype .nav-item { display:flex; align-items:center; gap:10px; padding:11px 13px; border:0; background:transparent; color:var(--sub); border-radius:8px; text-align:left; }
+#sales-prototype .nav-item[aria-current=page] { background:var(--soft); color:var(--brand); font-weight:600; }
+#sales-prototype .rail-bottom { margin-top:auto; color:var(--sub); font-size:12px; padding:0 12px; }
+#sales-prototype .work { min-width:0; }
+#sales-prototype .top { display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:76px; padding:18px 28px; border-bottom:1px solid var(--line); background:var(--paper); padding-right:100px; }
+#sales-prototype .crumb { color:var(--sub); font-size:12px; }
+#sales-prototype .top-title { font-weight:600; font-size:16px; }
+#sales-prototype .page { padding:30px; }
+#sales-prototype h1,#sales-prototype h2,#sales-prototype h3,#sales-prototype p { margin:0; }
+#sales-prototype h1 { font-size:27px; font-weight:650; line-height:1.4; letter-spacing:-.6px; }
+#sales-prototype h2 { font-size:17px; font-weight:600; }
+#sales-prototype h3 { font-size:15px; font-weight:600; }
+#sales-prototype .muted { color:var(--sub); }
+#sales-prototype .small { font-size:12px; }
+#sales-prototype .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+#sales-prototype .button { border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink); padding:8px 14px; display:inline-flex; align-items:center; justify-content:center; gap:7px; white-space:nowrap; text-decoration:none; }
+#sales-prototype .button.primary { background:var(--brand); border-color:var(--brand); color:light-dark(#fff,#10213c); }
+#sales-prototype .button.quiet { border-color:transparent; background:transparent; color:var(--sub); }
+#sales-prototype .button.danger { color:light-dark(#b03842,#ff9da5); }
+#sales-prototype .button:hover { filter:brightness(.96); }
+#sales-prototype .resume { display:flex; align-items:center; gap:20px; padding:22px; background:var(--soft); border-radius:12px; margin:26px 0 30px; }
+#sales-prototype .resume .resume-copy { flex:1; }
+#sales-prototype .resume .small { color:var(--brand); margin-bottom:5px; }
+#sales-prototype .resume-icon { color:var(--brand); display:grid; place-items:center; width:44px; height:44px; }
+#sales-prototype .practice-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+#sales-prototype .training-card { background:var(--paper); border:1px solid var(--line); padding:20px; border-radius:12px; display:flex; flex-direction:column; align-items:flex-start; gap:14px; min-height:210px; }
+#sales-prototype .training-card .card-icon { color:var(--brand); height:31px; }
+#sales-prototype .training-card p { color:var(--sub); font-size:12px; flex:1; }
+#sales-prototype .full-case { margin-top:16px; padding:22px; border:1px solid var(--line); border-radius:12px; background:var(--paper); display:flex; gap:18px; align-items:center; }
+#sales-prototype .full-case>div { flex:1; }
+#sales-prototype .full-case p { color:var(--sub); font-size:12px; margin-top:5px; }
+#sales-prototype .case-banner { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:24px; margin-top:22px; }
+#sales-prototype .case-banner .person { margin-bottom:22px; }
+#sales-prototype .person { display:flex; align-items:center; gap:12px; }
+#sales-prototype .avatar { width:38px; height:38px; display:grid; place-items:center; background:var(--bubble); color:var(--sub); border-radius:50%; flex-shrink:0; font-size:13px; font-weight:600; }
+#sales-prototype .avatar.coach-avatar { background:var(--soft); color:var(--brand); }
+#sales-prototype .details { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:22px 0; }
+#sales-prototype .details dt { color:var(--sub); font-size:12px; margin-bottom:8px; }
+#sales-prototype .details dd { margin:0; }
+#sales-prototype .flow { color:var(--sub); font-size:12px; padding:14px 0; border-top:1px solid var(--line); }
+#sales-prototype .chat-toolbar { background:var(--paper); padding:16px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+#sales-prototype .actions { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+#sales-prototype .chat-layout { display:grid; grid-template-columns:minmax(0,1fr); background:var(--paper); min-height:590px; }
+#sales-prototype .chat-layout.with-coach { grid-template-columns:minmax(0,1fr) minmax(255px,.75fr); }
+#sales-prototype .customer-pane,#sales-prototype .coach-pane { min-width:0; display:flex; flex-direction:column; }
+#sales-prototype .coach-pane { border-left:1px solid var(--line); background:light-dark(#f8faff,#182437); }
+#sales-prototype .coach-heading { padding:20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); gap:10px; }
+#sales-prototype .messages { padding:24px; flex:1; display:flex; flex-direction:column; gap:22px; }
+#sales-prototype .message { max-width:92%; align-self:flex-start; }
+#sales-prototype .message.mine { align-self:flex-end; }
+#sales-prototype .message-label { color:var(--sub); font-size:11px; margin-bottom:6px; }
+#sales-prototype .message.mine .message-label { text-align:right; }
+#sales-prototype .message-text { background:var(--bubble); padding:12px 15px; border-radius:2px 12px 12px 12px; overflow-wrap:anywhere; white-space:pre-wrap; }
+#sales-prototype .message.mine .message-text { background:var(--soft); border-radius:12px 2px 12px 12px; }
+#sales-prototype .coach-pane .message { max-width:100%; }
+#sales-prototype .coach-pane .message-text { background:transparent; padding:0; }
+#sales-prototype .coach-pane .message.mine .message-text { background:var(--soft); padding:12px; }
+#sales-prototype .composer { margin:0 22px 22px; border:1px solid var(--line); border-radius:12px; background:var(--paper); padding:12px; }
+#sales-prototype textarea { color:var(--ink); background:transparent; width:100%; min-height:68px; resize:vertical; border:0; padding:0; }
+#sales-prototype textarea::placeholder { color:var(--sub); }
+#sales-prototype .compose-foot { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-top:8px; }
+#sales-prototype .coach-pane .composer { margin:0 16px 16px; }
+#sales-prototype .materials { padding:22px; background:var(--soft); border-bottom:1px solid var(--line); }
+#sales-prototype .materials .details { margin-bottom:0; }
+#sales-prototype .record { display:flex; align-items:center; justify-content:space-between; gap:15px; padding:21px 0; border-bottom:1px solid var(--line); }
+#sales-prototype .record:first-of-type { margin-top:18px; }
+#sales-prototype .record-filters { display:flex; flex-wrap:wrap; gap:16px; margin-top:24px; }
+#sales-prototype .filter-label { display:flex; align-items:center; gap:9px; color:var(--sub); font-size:12px; }
+#sales-prototype .filter-select { font:inherit; font-size:14px; background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:8px 30px 8px 11px; max-width:100%; }
+#sales-prototype .filter-select:focus-visible { outline:3px solid var(--brand); outline-offset:3px; }
+#sales-prototype .record-info { flex:1; min-width:0; }
+#sales-prototype .record-info h3 { overflow-wrap:anywhere; }
+#sales-prototype .rename-label { display:block; font-size:12px; margin-bottom:7px; }
+#sales-prototype .rename-input { width:100%; min-width:0; max-width:420px; font:inherit; color:var(--ink); background:var(--paper); border:1px solid var(--line); border-radius:7px; padding:8px 10px; }
+#sales-prototype .rename-actions { margin-top:9px; }
+#sales-prototype .rename-input:focus-visible { outline:3px solid var(--brand); outline-offset:3px; }
+#sales-prototype .status { color:var(--good); font-size:12px; }
+#sales-prototype .status.ongoing { color:var(--brand); }
+#sales-prototype .review-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr) minmax(0,1fr); background:var(--paper); }
+#sales-prototype .review-layout>section,#sales-prototype .review-layout>aside { min-width:0; }
+#sales-prototype .review-transcript { border-right:1px solid var(--line); }
+#sales-prototype .review-heading { min-height:70px; display:flex; align-items:center; padding:18px; border-bottom:1px solid var(--line); }
+#sales-prototype .review-layout .report { padding:18px; }
+#sales-prototype .review-layout .messages { padding:18px; }
+#sales-prototype .review-layout .coach-heading { min-height:70px; padding:18px; }
+#sales-prototype .review-layout .message { max-width:100%; }
+#sales-prototype .review-layout .coach-pane { min-height:540px; }
+#sales-prototype .summary-placeholder { padding:22px 0; display:flex; flex-direction:column; gap:13px; }
+#sales-prototype .placeholder-line { display:block; height:10px; background:var(--bubble); border-radius:4px; }
+#sales-prototype .placeholder-line:nth-child(3n) { width:65%; margin-bottom:18px; }
+#sales-prototype .favorite-button[aria-pressed=true] { color:var(--brand); background:var(--soft); }
+#sales-prototype .favorite-button[aria-pressed=true] svg { fill:currentColor; }
+@media(max-width:760px) { #sales-prototype .review-layout { grid-template-columns:1fr; } #sales-prototype .review-transcript { border-right:0; } #sales-prototype .review-summary { border-top:1px solid var(--line); } }
+#sales-prototype .report { padding:26px; }
+#sales-prototype .report-block { padding:22px 0; border-bottom:1px solid var(--line); }
+#sales-prototype .report-block:first-child { padding-top:0; }
+#sales-prototype .report-block h3 { margin-bottom:10px; }
+#sales-prototype .report-block p { color:var(--sub); }
+#sales-prototype blockquote { margin:12px 0; padding:12px 15px; border-left:3px solid var(--brand); background:var(--soft); }
+#sales-prototype .quote-link { background:transparent; padding:0; border:0; color:var(--brand); font:inherit; font-size:12px; text-decoration:underline; }
+#sales-prototype .dialog-shade { position:absolute; inset:0; background:light-dark(#17263b66,#0009); z-index:3; display:flex; align-items:flex-start; justify-content:center; padding:150px 20px 30px; }
+#sales-prototype .dialog { background:var(--paper); width:420px; max-width:100%; border:1px solid var(--line); border-radius:16px; padding:26px; box-shadow:0 12px 50px #0002; }
+#sales-prototype .dialog p { color:var(--sub); margin:12px 0 25px; }
+#sales-prototype .dialog .actions { justify-content:flex-end; }
+#sales-prototype .empty { padding:35px 0; color:var(--sub); }
+#sales-prototype .product-library { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+#sales-prototype .product-card { display:flex; flex-direction:column; align-items:flex-start; gap:18px; min-width:0; padding:24px 20px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+#sales-prototype .product-card .card-icon { color:var(--brand); }
+#sales-prototype .product-card p { flex:1; }
+#sales-prototype .product-choice { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:23px 0; border-bottom:1px solid var(--line); }
+#sales-prototype .product-choice:last-child { border-bottom:0; }
+#sales-prototype .product-choice p { margin-top:7px; }
+@media(max-width:760px) { #sales-prototype .product-library { grid-template-columns:1fr; } #sales-prototype .product-choice { align-items:flex-start; flex-direction:column; } }
+#sales-prototype .study-entry { display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px; margin-top:22px; }
+#sales-prototype .product-section { padding:20px 0; border-bottom:1px solid var(--line); }
+#sales-prototype .product-section:last-child { border-bottom:0; }
+#sales-prototype .product-section h3 { margin-bottom:10px; }
+#sales-prototype .product-section p+p { margin-top:10px; }
+#sales-prototype .product-section ul { margin:8px 0 0; padding-left:20px; }
+#sales-prototype .product-section li+li { margin-top:8px; }
+#sales-prototype .product-section strong { font-weight:600; }
+#sales-prototype .topnav { display:block; }
+#sales-prototype .topnav .rail { padding:15px 25px; border-right:0; border-bottom:1px solid var(--line); flex-direction:row; align-items:center; gap:45px; }
+#sales-prototype .topnav .rail nav { flex-direction:row; }
+#sales-prototype .topnav .rail-bottom { display:none; }
+#sales-prototype .topnav .top { background:var(--canvas); border-bottom:0; padding-bottom:0; }
+#sales-prototype .topnav .page { max-width:880px; margin:auto; }
+#sales-prototype .topnav .practice-grid { display:flex; flex-direction:column; gap:0; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:0 24px; }
+#sales-prototype .topnav .training-card { display:grid; grid-template-columns:30px 170px minmax(0,1fr) auto; align-items:center; border:0; border-bottom:1px solid var(--line); border-radius:0; padding:22px 0; min-height:0; }
+#sales-prototype .topnav .training-card:last-child { border-bottom:0; }
+#sales-prototype .topnav .chat-layout { margin:18px 24px 24px; border:1px solid var(--line); border-radius:12px; overflow:clip; }
+#sales-prototype .topnav .chat-toolbar { background:var(--canvas); border:0; }
+@media(max-width:850px) { #sales-prototype .app { grid-template-columns:136px minmax(0,1fr); } #sales-prototype .page { padding:24px 20px; } #sales-prototype .rail { padding:24px 9px; } #sales-prototype .brand { font-size:15px; gap:7px; } #sales-prototype .top { padding-left:20px; } #sales-prototype .training-card { padding:17px; } #sales-prototype .chat-layout.with-coach { grid-template-columns:minmax(0,1fr) minmax(235px,.8fr); } #sales-prototype .chat-toolbar { padding:15px; } #sales-prototype .messages { padding:18px; } }
+@media(max-width:680px) { #sales-prototype .app { display:block; } #sales-prototype .rail { flex-direction:row; align-items:center; padding:16px; gap:15px; flex-wrap:wrap; border-right:0; border-bottom:1px solid var(--line); } #sales-prototype .rail nav { flex-direction:row; gap:2px; } #sales-prototype .nav-item { padding:8px; } #sales-prototype .rail-bottom { display:none; } #sales-prototype .top { min-height:60px; padding:14px 18px; } #sales-prototype .practice-grid { grid-template-columns:1fr; } #sales-prototype .training-card { min-height:0; display:grid; grid-template-columns:26px 1fr auto; gap:12px; align-items:center; } #sales-prototype .training-card p { grid-column:2/4; grid-row:2; } #sales-prototype .training-card .button { grid-column:3; grid-row:1; } #sales-prototype .resume { gap:8px; padding:17px; flex-wrap:wrap; } #sales-prototype .resume-icon { display:none; } #sales-prototype .full-case { align-items:flex-start; flex-direction:column; } #sales-prototype .chat-layout.with-coach,#sales-prototype .review-layout { grid-template-columns:1fr; } #sales-prototype .coach-pane { border-left:0; border-top:1px solid var(--line); } #sales-prototype .details { grid-template-columns:1fr; gap:16px; } #sales-prototype .record { flex-wrap:wrap; } #sales-prototype .topnav .rail { padding:16px; gap:12px; } #sales-prototype .topnav .training-card { grid-template-columns:26px 1fr auto; } #sales-prototype .topnav .chat-layout { margin:12px; } #sales-prototype .dialog-shade { padding-top:95px; } }
+@media(pointer:coarse) { #sales-prototype button { min-height:44px; } #sales-prototype textarea { font-size:16px; } }
+</style>
+<div id="sales-prototype">
+  <div class="viz-carousel" aria-label="销售陪练布局方案" data-previous-label="上一方案" data-next-label="下一方案">
+    <section data-variant="侧栏工作台"><div class="app" id="sales-workbench" aria-label="侧栏工作台原型"></div></section>
+    <section data-variant="顶部导航" hidden><div class="app topnav" id="sales-topnav" aria-label="顶部导航原型"></div></section>
+  </div>
+</div>
+<script>
+// 以多产品资料库和甲方负责人为基础，初始化两种可交互的界面方案。
+(function initializeSalesPrototype() {
+  const root=document.getElementById('sales-prototype');
+  const types=['需求沟通与方案介绍','商务谈判与合作推进','完整流程练习'];
+  const icons=['messages-square','handshake','route'];
+  const goals=['了解甲方需求，结合产品能力介绍合适的方案。','讨论价格、付款与服务条件，确认合作安排和下一步。','从初次沟通开始，持续推进到双方确认下一步。'];
+  const products=[
+    {id:'crm',name:'云序 CRM',category:'客户关系管理',summary:'线索、客户跟进、商机与经营报表。',company:'远川科技',person:'陈琳',role:'项目负责人',responsibility:'牵头客户管理系统选型，协调业务部门评估方案与采购。',context:'远川科技提供企业服务，目前正在评估客户管理系统。',fit:'需要统一客户信息、规范跟进流程并了解商机进展的企业。',features:[['线索分配与提醒','明确跟进人和待办，减少遗漏与重复联系。'],['客户沟通记录','集中保存跟进过程，支持跨人员交接。'],['商机管理与报表','查看商机阶段、预计金额和下一步安排。']],price:'标准版每账号每月 129 元，按年付费，10 个账号起订。',delivery:'标准上线预计 2–4 周，包含基础配置、表格导入指导和一次线上培训。',limits:'系统对接、复杂数据清洗与定制开发需要单独评估。折扣需经审批后确认。',problem:'客户信息分散，交接时容易漏掉跟进事项',example:'上个月有个客户换了对接人，之前的沟通记录没有同步，导致后续跟进遗漏了。',concern:'如果新系统让业务人员多做一遍录入，落地起来会比较困难。',ask:'“客户信息交接不完整，最近一次发生在什么情况下？对业务造成了什么影响？”'},
+    {id:'knowledge',name:'知汇企业知识库',category:'知识管理',summary:'文档归集、权限管理、全文搜索与版本记录。',company:'明川咨询',person:'林悦',role:'运营负责人',responsibility:'负责内部协作效率，牵头知识管理项目并组织部门试用。',context:'明川咨询有多个项目组，正在评估统一的内部知识库。',fit:'文档散落在聊天群和个人文件夹，需要积累经验和统一知识检索的企业。',features:[['统一文档空间','按项目归集文档，让团队找到可复用资料。'],['权限与版本管理','按成员设置访问权限，保留文档修改记录。'],['全文搜索','根据关键词查找文档内容，减少重复询问。']],price:'团队版每年 18,000 元，包含 50 个账号及 100 GB 存储。扩容费用另行确认。',delivery:'标准上线预计 1–2 周，包含空间初始化、权限配置指导和一次使用培训。',limits:'复杂历史文档整理、第三方系统集成和私有化部署需单独评估。',problem:'项目文档散落在群聊和个人电脑里，同事经常找不到最新版本',example:'上周新人准备方案时用了旧模板，直到交付前才发现，又花了一天重新整理。',concern:'我们比较关心不同项目组的文档权限，以及历史资料要花多少时间整理。',ask:'“上次找不到最新文档时，团队是怎么处理的？花了多少时间？”'},
+    {id:'contract',name:'合策合同管理',category:'合同管理',summary:'合同台账、审批流转、履约节点与到期提醒。',company:'启恒制造',person:'周宁',role:'采购负责人',responsibility:'负责供应商采购与合同履约，组织合同管理方案评估。',context:'启恒制造正在梳理供应商合同，计划改善合同跟踪与履约提醒。',fit:'合同数量较多，需要统一台账、审批记录和履约节点的企业。',features:[['统一合同台账','按供应商、状态和时间查询合同。'],['审批流程配置','记录审批意见，追踪待办和处理进度。'],['履约与到期提醒','跟踪付款、交付和续约时间，减少节点遗漏。']],price:'标准版每年 28,000 元，包含 20 个管理账号。额外账号与实施需求另行报价。',delivery:'标准上线预计 3–4 周，包含台账初始化、标准审批配置和一次培训。',limits:'复杂审批定制、财务系统对接与历史合同数据整理需单独评估。',problem:'合同靠表格和邮件跟踪，履约节点与续约时间容易遗漏',example:'上季度有一份供应商合同临近到期才被发现，留给重新议价的时间非常紧。',concern:'审批流程能否适配我们的采购规则，以及付款节点的提醒是否可靠，是我最关心的。',ask:'“最近一次遗漏合同节点发生在什么情况下？对采购安排带来了什么影响？”'}
+  ];
+  // 按稳定标识读取产品，兼容旧原型中未绑定产品的记录。
+  function getProduct(id) { for(const product of products) if(product.id===id) return product; return products[0]; }
+  // 对输入进行 HTML 转义，保证消息与资料仅作为文本展示。
+  function escapeText(value) { const span=document.createElement('span'); span.textContent=String(value); return span.innerHTML; }
+  // 转义双引号属性中的文本，允许练习名称包含引号等特殊字符。
+  function escapeAttribute(value) { return escapeText(value).replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+  // 生成由宿主初始化的装饰图标。
+  function icon(name) { return '<i data-lucide="'+name+'" aria-hidden="true"></i>'; }
+  // 为界面操作生成具有明确名称的原生按钮。
+  function button(label,action,style='',extra='') { return '<button type="button" class="button '+style+'" data-action="'+action+'" '+extra+'>'+label+'</button>'; }
+  // 按两个独立专项或完整流程生成开场，商务专项使用案例预设条件。
+  function opening(product,type) { return ['你好，我是'+product.company+'的'+product.role+product.person+'。我们正在了解'+product.category+'方案，你可以先了解一下我们的情况。','我们已经了解这套方案，想进一步讨论价格、付款和实施安排。','你好，我是'+product.person+'，负责这次'+product.category+'项目。我们可以先聊聊。'][type]; }
+  // 将旧版三个专项及完整练习的索引映射到合并后的训练类型。
+  function migratePracticeType(value) {
+    const legacy=Number(value);
+    if(legacy===2) return 1;
+    if(legacy===3) return 2;
+    return 0;
+  }
+  // 在每种布局中建立独立状态，并保留旧版原型已有的练习记录。
+  function mountApp(element,layout) {
+    let state={version:4,revision:0,page:'home',returnPage:'library',selected:0,product:'crm',viewedProduct:'crm',current:1,coach:false,materials:false,confirm:false,transcript:false,history:[{id:1,product:'crm',type:2,status:'ongoing',startedAt:'2026-11-12T10:24:00+08:00',favorite:false,messages:[{who:'customer',text:opening(products[0],2)},{who:'user',text:'陈经理，你们现在是怎么管理客户信息的？'},{who:'customer',text:'目前主要依赖表格，不同部门的信息不容易同步。'}],coach:[],followups:[]},{id:2,product:'knowledge',type:0,status:'done',startedAt:'2026-11-11T16:42:00+08:00',favorite:false,messages:[{who:'customer',text:opening(products[1],0)},{who:'user',text:'你们在文档查找和版本管理上遇到过什么问题？'},{who:'customer',text:products[1].example}],coach:[],followups:[]}]};
+    const saved=window.openai?.widgetState?.privateContent?.[layout];
+    if(saved&&Array.isArray(saved.history)) state={...state,...saved,version:saved.version??3};
+    // 升级旧练习与筛选类型，保留原对话、名称、收藏和开始时间。
+    function normalizeState() {
+      const validPages=['home','library','choose','prepare','practice','review','history','favorites','product'];
+      if(!validPages.includes(state.page)) state.page='home';
+      if(state.version!==4) {
+        for(const rec of state.history) rec.type=migratePracticeType(rec.type);
+        state.selected=migratePracticeType(state.selected);
+        for(const key of ['history','favorites']) {
+          const filters=state.filters?.[key];
+          if(filters&&filters.type!=='all'&&filters.type!==undefined) filters.type=String(migratePracticeType(filters.type));
+        }
+        state.version=4;
+      }
+      for(const rec of state.history) { rec.favorite=Boolean(rec.favorite); rec.product=getProduct(rec.product).id; rec.coach=rec.coach||[]; rec.followups=rec.followups||[]; for(const message of rec.messages) if(message.who==='customer') message.text=message.text.replace('销售负责人','项目负责人').replace('负责远川科技的销售团队','负责远川科技的客户管理系统选型'); }
+      state.product=getProduct(state.product).id;
+      state.viewedProduct=getProduct(state.viewedProduct).id;
+      state.filters=state.filters||{};
+      for(const key of ['history','favorites']) state.filters[key]={status:'all',type:'all',project:'all',...state.filters[key]};
+    }
+    normalizeState();
+    let previousFocus=null;
+    let renamingId=null;
+    let deletingFavoriteId=null;
+    // 获取当前练习记录，供对话、续练与复盘共同使用。
+    function currentRecord() { for(const rec of state.history) if(rec.id===state.current) return rec; return null; }
+    // 获取当前所选推销产品，资料浏览使用独立选择以免修改练习。
+    function selectedProduct() { return getProduct(state.product); }
+    // 保存产品、页面和记录快照，版本号避免旧异步状态覆盖新操作。
+    function remember() {
+      if(!window.openai?.setWidgetState) return;
+      state.revision=(state.revision||0)+1;
+      const old=window.openai.widgetState?.privateContent||{};
+      window.openai.setWidgetState({modelContent:{layout,page:state.page,practice:types[state.selected],product:selectedProduct().name},privateContent:{...old,[layout]:JSON.parse(JSON.stringify(state))}}).catch(/* 忽略可选宿主存储失败，内存中的练习仍可继续。 */ function ignoreStorageFailure() {});
+    }
+    // 使用所属练习的甲方姓名绘制双方消息，教练记录保持独立。
+    function messages(items,coach=false) {
+      const product=selectedProduct(); let html='';
+      for(let i=0;i<items.length;i++) { const item=items[i]; const mine=item.who==='user'; html+='<div class="message '+(mine?'mine':'')+'" id="'+layout+'-'+(coach?'coach-':'')+'message-'+i+'"><div class="message-label">'+(mine?'你':coach?'训练教练':product.person)+'</div><div class="message-text">'+escapeText(item.text)+'</div></div>'; }
+      return html;
+    }
+    // 为甲方或教练分别提供输入框，发送操作在原型内完成。
+    function composer(target) { const name=target==='customer'?selectedProduct().person:'训练教练'; return '<form class="composer" data-target="'+target+'"><label class="small muted" for="'+layout+'-'+target+'">发送给'+name+'</label><textarea id="'+layout+'-'+target+'" name="message" required maxlength="1200" aria-label="发送给'+name+'" placeholder="'+(target==='customer'?'输入你想对甲方说的话…':'你想向教练请教什么？')+'"></textarea><div class="compose-foot"><span class="small muted">'+(target==='customer'?'甲方负责人':'教练对话')+'</span><button class="button primary" type="button" data-action="send">发送 '+icon('arrow-up')+'</button></div></form>'; }
+    // 显示甲方角色及两个专项的案例预设条件，每次练习使用独立记录。
+    function caseDetails() { const p=selectedProduct(); return '<dl class="details"><div><dt>推销产品</dt><dd>'+p.name+'</dd></div><div><dt>你的角色</dt><dd>乙方产品销售</dd></div><div><dt>甲方公司</dt><dd>'+p.company+'<br>'+p.context+'</dd></div><div><dt>甲方负责人</dt><dd>'+p.person+' · '+p.role+'<br>'+p.responsibility+'</dd></div><div><dt>本次任务</dt><dd>'+goals[state.selected]+'</dd></div><div><dt>本次练习条件</dt><dd>'+(['甲方愿意初步了解产品，通过沟通确认具体需求并介绍方案。','案例已给定甲方需求与初步方案，本次围绕价格、付款、服务与下一步安排展开。','从初次接触开始，在同一场对话中逐步推进。'][state.selected])+'</dd></div></dl>'; }
+    // 根据所浏览的产品展示独立资料，包括价值、报价、交付和承诺范围。
+    function productContent(p) { let features=''; for(const feature of p.features) features+='<li><strong>'+feature[0]+'</strong>　'+feature[1]+'</li>'; return '<section class="product-section"><h3>产品与适用客户</h3><p>'+p.fit+'</p></section><section class="product-section"><h3>功能与客户价值</h3><ul>'+features+'</ul></section><section class="product-section"><h3>价格与商务条件</h3><p>'+p.price+'</p></section><section class="product-section"><h3>实施与售后</h3><p>'+p.delivery+'</p><p>工作日提供在线支持。</p></section><section class="product-section"><h3>常见顾虑</h3><p>客户可能关心上线难度、使用习惯、数据迁移和现有系统兼容性。先了解具体要求，再按产品能力回应。</p></section><section class="product-section"><h3>销售承诺范围</h3><p>'+p.limits+'</p></section>'; }
+    // 绘制项目资料库，多产品可独立阅读，不改变正在进行的练习。
+    function library() { let cards=''; for(const p of products) cards+='<article class="product-card"><div class="card-icon">'+icon('folder-open')+'</div><h2>'+p.name+'</h2><p class="muted">'+p.summary+'</p><div class="small muted">产品介绍 · 商务条件 · 实施服务</div>'+button('查看资料','product','','data-product="'+p.id+'"')+'</article>'; return '<div class="page"><div class="section-head"><h1>项目资料</h1><span class="small muted">'+products.length+' 个产品</span></div><div class="product-library">'+cards+'</div></div>'; }
+    // 在专项之后展示可推销产品，同时允许先阅读该产品资料。
+    function choose() { let rows=''; for(const p of products) rows+='<article class="product-choice"><div><h2>'+p.name+'</h2><p class="small muted">'+p.summary+'</p></div><div class="actions">'+button('查看资料','product','quiet','data-product="'+p.id+'"')+button('选择此产品','choose-product','primary','data-product="'+p.id+'"')+'</div></article>'; return '<div class="page"><div class="section-head"><div><p class="small muted">'+types[state.selected]+'</p><h1>选择推销的产品</h1></div>'+button('返回首页','home','quiet')+'</div><div class="case-banner">'+rows+'</div></div>'; }
+    // 展示单产品资料，返回时恢复资料库、选产品或练习原页面。
+    function productPage() { const p=getProduct(state.viewedProduct); const labels={library:'返回项目资料',choose:'返回产品选择',prepare:'返回练习准备',practice:'返回陪练',review:'返回复盘'}; return '<div class="page"><div class="section-head"><div><h1>'+p.name+'</h1><p class="small muted">'+p.category+' · 虚构训练产品</p></div>'+button(labels[state.returnPage]||'返回首页','back-product')+'</div><section class="case-banner">'+productContent(p)+'</section></div>'; }
+    // 首页展示两个专项及完整流程入口，并提供最近未完成练习的续练操作。
+    function home() {
+      let recent=null;
+      let recentTime=-Infinity;
+      for(const rec of state.history) {
+        if(rec.status!=='ongoing') continue;
+        const parsed=Date.parse(rec.startedAt);
+        const time=Number.isFinite(parsed)?parsed:-Infinity;
+        if(!recent||time>recentTime) { recent=rec; recentTime=time; }
+      }
+      let resume='';
+      if(recent) resume='<div class="resume"><div class="resume-icon">'+icon('history')+'</div><div class="resume-copy"><div class="small">最近未完成的练习</div><h3>'+escapeText(exerciseName(recent))+'</h3><p class="small muted">开始时间 '+formatStartTime(recent)+'</p></div>'+button('继续练习','resume','primary','data-id="'+recent.id+'"')+'</div>';
+      let cards='';
+      for(let index=0;index<2;index++) cards+='<article class="training-card"><div class="card-icon">'+icon(icons[index])+'</div><h3>'+types[index]+'</h3><p>'+goals[index]+'</p>'+button('进入专项','select','','data-type="'+index+'"')+'</article>';
+      return '<div class="page"><h1>开始今天的练习</h1>'+resume+'<div class="section-head"><h2>专项练习</h2></div><div class="practice-grid">'+cards+'</div><div class="full-case"><div><h3>完整流程练习</h3><p>需求沟通与方案介绍 → 商务谈判与合作推进</p></div>'+button('进入练习','select','primary','data-type="2"')+'</div></div>';
+    }
+    // 开练前展示所选产品、具体甲方和任务，并允许返回重新选产品。
+    function prepare() { const p=selectedProduct(); return '<div class="page"><div class="section-head"><h1>'+types[state.selected]+'</h1>'+button('更换产品','change-product','quiet')+'</div><section class="case-banner"><div class="person"><div class="avatar">'+p.person[0]+'</div><div><h2>与'+p.person+'沟通'+p.category+'方案</h2><p class="small muted">甲方 · '+p.company+' · '+p.role+'</p></div></div>'+caseDetails()+'<div class="actions">'+button('查看产品资料','product','','data-product="'+p.id+'"')+button('开始练习','start','primary')+'</div></section></div>'; }
+    // 绘制教练问答区，复盘阶段以占位内容展示交互布局。
+    function coachPanel(review=false) { const rec=currentRecord(); const list=review?rec.followups:rec.coach; return '<aside class="coach-pane"><div class="coach-heading"><div class="person"><div class="avatar coach-avatar">'+icon('sparkles')+'</div><h3>训练教练</h3></div>'+(!review?button(icon('x'),'coach','quiet','aria-label="收起教练"'):'')+'</div><div class="messages" aria-live="polite">'+(list.length?messages(list,true):'<div class="message"><div class="message-text">'+(review?'你可以围绕本次练习提问。':'你想讨论刚才的沟通，还是下一步怎么问？')+'</div></div>')+'</div>'+composer(review?'followup':'coach')+'</aside>'; }
+    // 客户姓名、身份与资料入口均沿用当前练习绑定的产品案例。
+    function practice() { const rec=currentRecord(); if(!rec) return home(); const p=selectedProduct(); return '<div class="chat-toolbar"><div class="person"><div class="avatar">'+p.person[0]+'</div><div><h3>'+p.person+'</h3><p class="small muted">甲方 · '+p.company+' · '+p.role+'</p></div></div><div class="actions">'+button('产品资料','product','','data-product="'+p.id+'"')+button('本次任务','materials',state.materials?'primary':'')+button('问教练','coach',state.coach?'primary':'')+button('结束练习','finish','danger')+'</div></div>'+(state.materials?'<section class="materials"><h3>本次任务与甲方背景</h3>'+caseDetails()+'</section>':'')+'<div class="chat-layout '+(state.coach?'with-coach':'')+'"><section class="customer-pane" aria-label="与甲方负责人'+p.person+'沟通"><div class="messages" aria-live="polite">'+messages(rec.messages)+'</div>'+composer('customer')+'</section>'+(state.coach?coachPanel():'')+'</div>'; }
+    // 将开始时间显示为北京时间，旧记录缺失的时间保持为未记录。
+    function formatStartTime(rec) {
+      if(!rec.startedAt) return '未记录';
+      const date=new Date(rec.startedAt);
+      if(Number.isNaN(date.getTime())) return '未记录';
+      return new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(date);
+    }
+    // 优先读取学员保存的练习名称，旧记录使用产品与练习类型作为默认名称。
+    function exerciseName(rec) {
+      return rec.name||getProduct(rec.product).name+' · '+types[rec.type];
+    }
+    // 为同一练习生成收藏操作，无障碍名称同步使用学员修改后的练习名称。
+    function favoriteButton(rec) {
+      return button(icon('star')+(rec.favorite?'已收藏':'收藏'),'favorite','favorite-button','data-id="'+rec.id+'" aria-pressed="'+Boolean(rec.favorite)+'" aria-label="'+(rec.favorite?'取消收藏':'收藏')+escapeAttribute(exerciseName(rec))+'"');
+    }
+    // 在历史或收藏行内编辑名称，支持保存与取消并安全回填现有名称。
+    function renameEditor(rec) {
+      const id=layout+'-rename-'+rec.id;
+      return '<div><label class="rename-label" for="'+id+'">练习名称</label><input class="rename-input" id="'+id+'" type="text" data-rename-input="'+rec.id+'" value="'+escapeAttribute(exerciseName(rec))+'" maxlength="80" required><div class="actions rename-actions">'+button('保存','save-rename','primary')+button('取消','cancel-rename')+'</div></div>';
+    }
+    // 保存当前行的新名称，空白名称提示补充，收藏与复盘继续使用同一记录。
+    function saveRename() {
+      const input=element.querySelector('[data-rename-input]');
+      if(!input) return;
+      const name=input.value.trim();
+      input.setCustomValidity(name?'':'请输入练习名称');
+      if(!input.reportValidity()) return;
+      const savedId=renamingId;
+      for(const rec of state.history) if(rec.id===renamingId) rec.name=name;
+      renamingId=null;
+      render();
+      remember();
+      element.querySelector('[data-action="rename"][data-id="'+savedId+'"]')?.focus();
+    }
+    // 绘制状态、练习类型与产品项目选择器，三个条件可组合筛选。
+    function recordFilters(filters) {
+      let options='<option value="all" '+(filters.type==='all'?'selected':'')+'>全部类型</option>';
+      for(let index=0;index<types.length;index++) options+='<option value="'+index+'" '+(filters.type===String(index)?'selected':'')+'>'+types[index]+'</option>';
+      let projects='<option value="all" '+(filters.project==='all'?'selected':'')+'>全部项目</option>';
+      for(const product of products) projects+='<option value="'+product.id+'" '+(filters.project===product.id?'selected':'')+'>'+product.name+'</option>';
+      return '<div class="record-filters"><label class="filter-label">状态<select class="filter-select" data-filter="status"><option value="all" '+(filters.status==='all'?'selected':'')+'>全部状态</option><option value="done" '+(filters.status==='done'?'selected':'')+'>已完成</option><option value="ongoing" '+(filters.status==='ongoing'?'selected':'')+'>未完成</option></select></label><label class="filter-label">练习类型<select class="filter-select" data-filter="type">'+options+'</select></label><label class="filter-label">项目<select class="filter-select" data-filter="project">'+projects+'</select></label></div>';
+    }
+    // 历史与收藏分别按状态、类型与产品项目筛选，匹配记录保留原操作。
+    function history(favoritesOnly=false) {
+      const filters=state.filters[favoritesOnly?'favorites':'history'];
+      let total=0;
+      let rows='';
+      for(const rec of state.history) {
+        if(favoritesOnly&&!rec.favorite) continue;
+        total++;
+        if(filters.status!=='all'&&rec.status!==filters.status) continue;
+        if(filters.type!=='all'&&String(rec.type)!==filters.type) continue;
+        if(filters.project!=='all'&&rec.product!==filters.project) continue;
+        const p=getProduct(rec.product);
+        const editing=renamingId===rec.id;
+        const title=editing?renameEditor(rec):'<h3>'+escapeText(exerciseName(rec))+'</h3>';
+        const metadata=rec.name?'<p class="small muted">'+p.name+' · '+types[rec.type]+'</p>':'';
+        const favoriteAction=favoritesOnly?button('删除','delete-favorite','danger','data-id="'+rec.id+'" aria-label="删除收藏'+escapeAttribute(exerciseName(rec))+'"'):favoriteButton(rec);
+        rows+='<article class="record"><div class="record-info">'+title+metadata+'<p class="small muted">开始时间 '+formatStartTime(rec)+'</p></div><div class="actions"><span class="status '+(rec.status==='ongoing'?'ongoing':'')+'">'+(rec.status==='ongoing'?'未完成':'已完成')+'</span>'+(!editing?button('重命名','rename','quiet','data-id="'+rec.id+'"'):'')+favoriteAction+button(rec.status==='ongoing'?'继续练习':'查看复盘',rec.status==='ongoing'?'resume':'open-review','','data-id="'+rec.id+'"')+'</div></article>';
+      }
+      if(!rows) rows=total?'<div class="empty">没有符合条件的练习</div>':'<div class="empty"><p>'+(favoritesOnly?'还没有收藏的练习':'还没有练习记录')+'</p>'+button(favoritesOnly?'查看历史记录':'前往练习',favoritesOnly?'history':'home','quiet')+'</div>';
+      return '<div class="page"><h1>'+(favoritesOnly?'收藏':'历史记录')+'</h1>'+recordFilters(filters)+'<div aria-live="polite">'+rows+'</div></div>';
+    }
+    // 更新所在列表的筛选条件，保留另一列表的选择并恢复控件焦点。
+    function onFilterChange(event) {
+      const control=event.target.closest('select[data-filter]');
+      if(!control||!['history','favorites'].includes(state.page)) return;
+      const field=control.dataset.filter;
+      state.filters[state.page][field]=control.value;
+      renamingId=null;
+      render();
+      remember();
+      element.querySelector('[data-filter="'+field+'"]')?.focus();
+    }
+    // 删除前明确提示操作仅移出收藏，原历史记录可继续访问。
+    function favoriteDeleteDialog() {
+      return '<div class="dialog-shade"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="'+layout+'-delete-title"><h2 id="'+layout+'-delete-title">删除这条收藏？</h2><p>这次练习将从收藏列表移除，历史记录仍会保留。</p><div class="actions">'+button('取消','cancel-delete-favorite')+button('删除收藏','confirm-delete-favorite','danger')+'</div></section></div>';
+    }
+    // 复盘同步显示练习名称，保留三栏布局及总结与教练回复的占位内容。
+    function review() {
+      const rec=currentRecord();
+      if(!rec) return home();
+      const p=selectedProduct();
+      return '<div class="chat-toolbar"><div><h2>'+escapeText(exerciseName(rec))+'</h2><p class="small muted">'+types[rec.type]+' · '+p.name+' · '+p.person+'</p><p class="small muted">开始时间 '+formatStartTime(rec)+'</p></div><div class="actions">'+favoriteButton(rec)+button('重新练习','retry','primary')+'</div></div><div class="review-layout"><section class="review-transcript" aria-label="原始聊天记录"><header class="review-heading"><h3>原始聊天记录</h3></header><div class="messages">'+messages(rec.messages)+'</div></section><section class="review-summary" aria-label="复盘总结"><header class="review-heading"><h3>复盘总结</h3></header><div class="report"><p class="small muted">总结内容待设计</p><div class="summary-placeholder" aria-hidden="true"><span class="placeholder-line"></span><span class="placeholder-line"></span><span class="placeholder-line"></span><span class="placeholder-line"></span><span class="placeholder-line"></span><span class="placeholder-line"></span></div></div></section>'+coachPanel(true)+'</div>';
+    }
+    // 渲染页面和删除收藏提示，并将确认操作的焦点放在弹窗中。
+    function render() {
+      const inLibrary=state.page==='library'||state.page==='product'&&state.returnPage==='library';
+      const training=['choose','prepare','practice','review'].includes(state.page);
+      const title=state.page==='home'?'训练首页':state.page==='history'?'历史记录':state.page==='favorites'?'收藏':inLibrary?'项目资料':state.page==='product'?'产品资料':types[state.selected];
+      let content;
+      switch(state.page) {
+        case 'home':content=home();break;
+        case 'library':content=library();break;
+        case 'choose':content=choose();break;
+        case 'prepare':content=prepare();break;
+        case 'practice':content=practice();break;
+        case 'history':content=history();break;
+        case 'favorites':content=history(true);break;
+        case 'product':content=productPage();break;
+        default:content=review();
+      }
+      element.innerHTML='<aside class="rail"><div class="brand"><span class="brand-mark">'+icon('audio-lines')+'</span>销售陪练</div><nav aria-label="主导航"><button class="nav-item" data-action="home" '+(!inLibrary&&!['history','favorites'].includes(state.page)?'aria-current="page"':'')+'>'+icon('layout-grid')+'训练首页</button><button class="nav-item" data-action="library" '+(inLibrary?'aria-current="page"':'')+'>'+icon('folder-open')+'项目资料</button><button class="nav-item" data-action="history" '+(state.page==='history'?'aria-current="page"':'')+'>'+icon('clock-3')+'历史记录</button><button class="nav-item" data-action="favorites" '+(state.page==='favorites'?'aria-current="page"':'')+'>'+icon('star')+'收藏</button></nav><div class="rail-bottom">文字陪练</div></aside><main class="work"><header class="top"><div><div class="crumb">'+(training?'销售训练 / '+types[state.selected]:'销售训练')+'</div><div class="top-title">'+title+'</div></div>'+(state.page==='practice'?button('退出练习','home','quiet'):'')+'</header>'+content+'</main>'+(state.confirm?'<div class="dialog-shade"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="'+layout+'-confirm-title"><h2 id="'+layout+'-confirm-title">结束本次练习？</h2><p>确认后将结束本次甲方沟通并进入复盘。对话记录会保留，重练将恢复同一产品和甲方的初始情境。</p><div class="actions">'+button('继续沟通','cancel')+button('结束并复盘','confirm','primary')+'</div></section></div>':'');
+      if(deletingFavoriteId!==null) element.insertAdjacentHTML('beforeend',favoriteDeleteDialog());
+      if(globalThis.lucide) lucide.createIcons({attrs:{width:17,height:17}});
+      if(deletingFavoriteId!==null) element.querySelector('[data-action="cancel-delete-favorite"]').focus();
+      else if(state.confirm) element.querySelector('[data-action="cancel"]').focus();
+      else if(previousFocus) {
+        element.querySelector('[data-action="'+previousFocus+'"]')?.focus();
+        previousFocus=null;
+      }
+    }
+    // 创建独立练习，开始时间在点击开始时记录，重练默认未收藏。
+    function startPractice() {
+      const p=selectedProduct();
+      let maxId=0;
+      for(const rec of state.history) maxId=Math.max(maxId,rec.id);
+      state.current=maxId+1;
+      state.history.unshift({id:state.current,product:p.id,type:state.selected,status:'ongoing',startedAt:new Date().toISOString(),favorite:false,messages:[{who:'customer',text:opening(p,state.selected)}],coach:[],followups:[]});
+      state.coach=false;
+      state.materials=false;
+      state.page='practice';
+    }
+    // 处理重命名及收藏删除确认，移出收藏时保留原练习与对话。
+    function onAction(event) {
+      const target=event.target.closest('[data-action]'); if(!target||!element.contains(target)) return;
+      const action=target.dataset.action;
+      let restoreDeleteFocusId=null;
+      if(action==='send') { onSubmit(event); return; }
+      if(action==='save-rename') { saveRename(); return; }
+      if(action==='rename') renamingId=Number(target.dataset.id);
+      if(action==='cancel-rename') renamingId=null;
+      if(action==='delete-favorite') { deletingFavoriteId=Number(target.dataset.id); renamingId=null; }
+      if(action==='cancel-delete-favorite') { restoreDeleteFocusId=deletingFavoriteId; deletingFavoriteId=null; }
+      if(action==='confirm-delete-favorite') {
+        for(const rec of state.history) if(rec.id===deletingFavoriteId) rec.favorite=false;
+        deletingFavoriteId=null;
+      }
+      if(action==='favorite') {
+        for(const rec of state.history) if(rec.id===Number(target.dataset.id)) rec.favorite=!rec.favorite;
+      }
+      if(['home','history','favorites','library'].includes(action)) { state.page=action; state.confirm=false; renamingId=null; deletingFavoriteId=null; }
+      if(action==='product') { state.viewedProduct=getProduct(target.dataset.product).id; state.returnPage=state.page; state.page='product'; }
+      if(action==='back-product') state.page=state.returnPage||'library';
+      if(action==='select') { state.selected=Number(target.dataset.type); state.page='choose'; }
+      if(action==='choose-product') { state.product=getProduct(target.dataset.product).id; state.page='prepare'; }
+      if(action==='change-product') state.page='choose';
+      if(action==='start') startPractice();
+      if(action==='resume'||action==='open-review') { state.current=Number(target.dataset.id); const rec=currentRecord(); state.selected=rec.type; state.product=rec.product; state.page=action==='resume'?'practice':'review'; state.transcript=false; state.coach=false; }
+      if(action==='coach') state.coach=!state.coach;
+      if(action==='materials') state.materials=!state.materials;
+      if(action==='finish') state.confirm=true;
+      if(action==='cancel') { state.confirm=false; previousFocus='finish'; }
+      if(action==='confirm') { currentRecord().status='done'; state.page='review'; state.confirm=false; state.transcript=false; }
+      if(action==='retry') { const rec=currentRecord(); state.selected=rec.type; state.product=rec.product; state.page='prepare'; }
+      render(); remember();
+      if(restoreDeleteFocusId!==null) element.querySelector('[data-action="delete-favorite"][data-id="'+restoreDeleteFocusId+'"]')?.focus();
+      if(action==='rename') {
+        const input=element.querySelector('[data-rename-input]');
+        input?.focus();
+        input?.select();
+      }
+    }
+    // 保存提问并展示演示回复，复盘教练只反馈占位文案。
+    function onSubmit(event) { const form=event.target.closest('form[data-target]'); if(!form) return; event.preventDefault(); const input=form.querySelector('textarea'); const text=input.value.trim(); if(!text) { input.focus(); return; } const rec=currentRecord(); const p=selectedProduct(); const target=form.dataset.target; const list=target==='customer'?rec.messages:target==='coach'?rec.coach:rec.followups; list.push({who:'user',text}); const replies=target==='customer'?['我们目前'+p.problem+'。',p.example,p.concern]:target==='coach'?['可以请'+p.person+'讲一个具体例子，再确认问题对业务的影响。也可以从她负责的工作和这次项目目标开始了解。']:['已收到你的问题，教练回复将在这里展示。']; list.push({who:target==='customer'?'customer':'coach',text:replies[Math.max(0,Math.min(Math.floor(list.length/2)-1,replies.length-1))]}); render(); remember(); element.querySelector('form[data-target="'+target+'"] textarea')?.focus(); }
+    // 支持名称编辑快捷键，并管理结束练习与删除收藏弹窗的焦点。
+    function onKeydown(event) {
+      if(event.target.matches('[data-rename-input]')) {
+        if(event.isComposing) return;
+        if(event.key==='Enter') { event.preventDefault(); saveRename(); return; }
+        if(event.key==='Escape') {
+          const cancelledId=renamingId;
+          renamingId=null;
+          render();
+          element.querySelector('[data-action="rename"][data-id="'+cancelledId+'"]')?.focus();
+          return;
+        }
+      }
+      if(deletingFavoriteId!==null&&event.key==='Escape') {
+        const cancelledId=deletingFavoriteId;
+        deletingFavoriteId=null;
+        render();
+        element.querySelector('[data-action="delete-favorite"][data-id="'+cancelledId+'"]')?.focus();
+        return;
+      }
+      if(!state.confirm&&deletingFavoriteId===null) return;
+      if(event.key==='Escape') { state.confirm=false; previousFocus='finish'; render(); return; }
+      if(event.key==='Tab') {
+        const buttons=element.querySelectorAll('.dialog button');
+        const first=buttons[0];
+        const last=buttons[buttons.length-1];
+        if(event.shiftKey&&document.activeElement===first) { event.preventDefault(); last.focus(); }
+        else if(!event.shiftKey&&document.activeElement===last) { event.preventDefault(); first.focus(); }
+      }
+    }
+    // 接受宿主较新的兼容状态，避免过时回传覆盖刚发生的交互。
+    function onGlobals(event) { const next=event.detail?.globals?.widgetState?.privateContent?.[layout]; if(next&&(next.revision||0)>(state.revision||0)&&Array.isArray(next.history)) { state={...state,...next}; normalizeState(); render(); } }
+    element.addEventListener('click',onAction); element.addEventListener('submit',onSubmit); element.addEventListener('keydown',onKeydown); element.addEventListener('change',onFilterChange); window.addEventListener('openai:set_globals',onGlobals);
+    render();
+    const design={accent:'#245cbe'};
+    // 允许在宿主中调整产品主色，保持当前交互状态。
+    function updateDesign() { element.style.setProperty('--brand',design.accent); }
+    if(globalThis.Tweak) { const tweak=new Tweak({container:element,onChange:updateDesign}); tweak.addColorPicker(design,'accent',{label:'主色',reference:'--brand'}); }
+  }
+  mountApp(root.querySelector('#sales-workbench'),'workbench');
+  mountApp(root.querySelector('#sales-topnav'),'topnav');
+})();
+</script>

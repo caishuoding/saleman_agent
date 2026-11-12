@@ -1,0 +1,1182 @@
+<!-- 知汇企业知识库产品演示，功能、数据和商业信息均为虚构训练设定。 -->
+<style>
+  [data-enterprise-demo] {
+    color-scheme: light dark;
+    --ep-bg: light-dark(#f4f7f8, #121c22);
+    --ep-paper: light-dark(#fff, #1b2831);
+    --ep-ink: light-dark(#263b43, #e3edf0);
+    --ep-sub: light-dark(#687e87, #a5bac3);
+    --ep-line: light-dark(#dfe8eb, #354b56);
+    --ep-brand: light-dark(#167b78, #7ad5ce);
+    --ep-soft: light-dark(#e7f3f1, #203d40);
+    --ep-red: light-dark(#b43e43, #ffa0a5);
+    font:
+      14px/1.65 "Geist",
+      "PingFang SC",
+      "Microsoft YaHei",
+      sans-serif;
+    color: var(--ep-ink);
+  }
+  [data-enterprise-demo] * {
+    box-sizing: border-box;
+  }
+  [data-enterprise-demo] [hidden] {
+    display: none !important;
+  }
+  [data-enterprise-demo] button,
+  [data-enterprise-demo] input,
+  [data-enterprise-demo] textarea,
+  [data-enterprise-demo] select {
+    font: inherit;
+  }
+  [data-enterprise-demo] button {
+    cursor: pointer;
+  }
+  [data-enterprise-demo] :is(button, input, textarea, select):focus-visible {
+    outline: 3px solid var(--ep-brand);
+    outline-offset: 3px;
+  }
+  [data-enterprise-demo] :is(h1, h2, h3, p) {
+    margin: 0;
+  }
+  [data-enterprise-demo] h1 {
+    font-size: 24px;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  [data-enterprise-demo] h2 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+  [data-enterprise-demo] h3 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  [data-enterprise-demo] .ep-shell {
+    display: grid;
+    grid-template-columns: 166px minmax(0, 1fr);
+    min-height: 748px;
+    border: 1px solid var(--ep-line);
+    border-radius: 14px;
+    overflow: clip;
+    background: var(--ep-bg);
+  }
+  [data-enterprise-demo] .ep-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 27px;
+    padding: 24px 12px;
+    border-right: 1px solid var(--ep-line);
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] .ep-logo {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 650;
+    white-space: nowrap;
+    padding: 0 8px;
+  }
+  [data-enterprise-demo] .ep-mark {
+    width: 28px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    background: var(--ep-brand);
+    color: light-dark(#fff, #142e33);
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  [data-enterprise-demo] .ep-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-align: left;
+    padding: 11px 12px;
+    background: transparent;
+    color: var(--ep-sub);
+    border: 0;
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] .ep-nav[aria-current="page"] {
+    background: var(--ep-soft);
+    color: var(--ep-brand);
+    font-weight: 600;
+  }
+  [data-enterprise-demo] .ep-account {
+    margin-top: auto;
+    border-top: 1px solid var(--ep-line);
+    padding: 16px 8px 0;
+  }
+  [data-enterprise-demo] .ep-main {
+    min-width: 0;
+  }
+  [data-enterprise-demo] .ep-top {
+    min-height: 64px;
+    padding: 15px 110px 15px 27px;
+    background: var(--ep-paper);
+    border-bottom: 1px solid var(--ep-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  [data-enterprise-demo] .ep-top label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ep-sub);
+  }
+  [data-enterprise-demo] .ep-role {
+    border: 0;
+    background: var(--ep-paper);
+    color: var(--ep-ink);
+    max-width: 135px;
+  }
+  [data-enterprise-demo] .ep-page {
+    padding: 28px;
+  }
+  [data-enterprise-demo] .ep-muted {
+    color: var(--ep-sub);
+  }
+  [data-enterprise-demo] .ep-small {
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 23px;
+  }
+  [data-enterprise-demo] .ep-heading p {
+    margin-top: 5px;
+    color: var(--ep-sub);
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  [data-enterprise-demo] .ep-button {
+    border: 1px solid var(--ep-line);
+    border-radius: 7px;
+    padding: 8px 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: var(--ep-paper);
+    color: var(--ep-ink);
+    white-space: nowrap;
+  }
+  [data-enterprise-demo] .ep-button.primary {
+    background: var(--ep-brand);
+    border-color: var(--ep-brand);
+    color: light-dark(#fff, #142e33);
+  }
+  [data-enterprise-demo] .ep-button.quiet {
+    color: var(--ep-sub);
+    border-color: transparent;
+    background: transparent;
+  }
+  [data-enterprise-demo] .ep-button.danger {
+    color: var(--ep-red);
+  }
+  [data-enterprise-demo] .ep-button[aria-pressed="true"] {
+    color: var(--ep-brand);
+    background: var(--ep-soft);
+    border-color: var(--ep-brand);
+  }
+  [data-enterprise-demo] .ep-link {
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--ep-brand);
+    background: transparent;
+    text-align: left;
+  }
+  [data-enterprise-demo] .ep-field {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--ep-line);
+    border-radius: 7px;
+    padding: 10px 12px;
+    color: var(--ep-ink);
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] .ep-label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 15px 0;
+    font-size: 12px;
+  }
+  [data-enterprise-demo] textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+  [data-enterprise-demo] .ep-panel {
+    padding: 22px;
+    background: var(--ep-paper);
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+    min-width: 0;
+  }
+  [data-enterprise-demo] .ep-panel + .ep-panel {
+    margin-top: 19px;
+  }
+  [data-enterprise-demo] .ep-table-wrap {
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+    overflow: auto;
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+  }
+  [data-enterprise-demo] th,
+  [data-enterprise-demo] td {
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--ep-line);
+    vertical-align: top;
+  }
+  [data-enterprise-demo] th {
+    color: var(--ep-sub);
+    font-weight: 500;
+    background: var(--ep-bg);
+    white-space: nowrap;
+  }
+  [data-enterprise-demo] tr:last-child td {
+    border-bottom: 0;
+  }
+  [data-enterprise-demo] .ep-tag {
+    display: inline-block;
+    background: var(--ep-soft);
+    color: var(--ep-brand);
+    font-size: 11px;
+    border-radius: 5px;
+    padding: 2px 7px;
+  }
+  [data-enterprise-demo] .ep-filters {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  [data-enterprise-demo] .ep-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 235px;
+    gap: 18px;
+  }
+  [data-enterprise-demo] .ep-document {
+    padding: 30px 32px;
+    background: var(--ep-paper);
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+  }
+  [data-enterprise-demo] .ep-article {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.95;
+    margin-top: 24px;
+  }
+  [data-enterprise-demo] .ep-docmeta {
+    color: var(--ep-sub);
+    font-size: 11px;
+    margin-top: 9px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 18px;
+  }
+  [data-enterprise-demo] .ep-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-row:last-child {
+    border-bottom: 0;
+  }
+  [data-enterprise-demo] .ep-comment {
+    border-top: 1px solid var(--ep-line);
+    margin-top: 25px;
+    padding-top: 18px;
+  }
+  [data-enterprise-demo] .ep-comment p {
+    white-space: pre-wrap;
+    margin-top: 7px;
+  }
+  [data-enterprise-demo] .ep-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+  }
+  [data-enterprise-demo] .ep-grid .ep-panel {
+    margin-top: 0;
+  }
+  [data-enterprise-demo] .ep-template {
+    min-height: 215px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  [data-enterprise-demo] .ep-template p {
+    flex: 1;
+  }
+  [data-enterprise-demo] .ep-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 23px;
+  }
+  [data-enterprise-demo] .ep-result {
+    padding: 21px 0;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-result p {
+    margin-top: 8px;
+  }
+  [data-enterprise-demo] .ep-empty {
+    text-align: center;
+    color: var(--ep-sub);
+    padding: 40px 15px;
+  }
+  [data-enterprise-demo] .ep-notice {
+    margin: 0 28px 20px;
+    padding: 11px 14px;
+    color: var(--ep-brand);
+    background: var(--ep-soft);
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] .ep-meter {
+    margin: 18px 0;
+    height: 12px;
+    border-radius: 7px;
+    overflow: hidden;
+    background: var(--ep-bg);
+  }
+  [data-enterprise-demo] .ep-meter span {
+    display: block;
+    height: 100%;
+    width: 12.6%;
+    background: var(--ep-brand);
+  }
+  [data-enterprise-demo] .ep-facts {
+    margin: 18px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 19px;
+  }
+  [data-enterprise-demo] .ep-facts dt {
+    color: var(--ep-sub);
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-facts dd {
+    margin: 5px 0 0;
+  }
+  [data-enterprise-demo] .ep-error {
+    color: var(--ep-red);
+  }
+  @media (max-width: 850px) {
+    [data-enterprise-demo] .ep-shell {
+      grid-template-columns: 140px minmax(0, 1fr);
+    }
+    [data-enterprise-demo] .ep-rail {
+      padding: 24px 8px;
+    }
+    [data-enterprise-demo] .ep-logo {
+      padding: 0;
+      font-size: 16px;
+    }
+    [data-enterprise-demo] .ep-page {
+      padding: 23px 18px;
+    }
+    [data-enterprise-demo] .ep-split {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-document {
+      padding: 25px;
+    }
+  }
+  @media (max-width: 580px) {
+    [data-enterprise-demo] .ep-shell {
+      display: block;
+    }
+    [data-enterprise-demo] .ep-rail {
+      border-right: 0;
+      border-bottom: 1px solid var(--ep-line);
+      gap: 15px;
+      padding: 16px;
+    }
+    [data-enterprise-demo] nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    [data-enterprise-demo] .ep-nav {
+      padding: 8px;
+    }
+    [data-enterprise-demo] .ep-account {
+      display: none;
+    }
+    [data-enterprise-demo] .ep-top {
+      padding: 14px 18px;
+    }
+    [data-enterprise-demo] .ep-grid {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-facts {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-search {
+      flex-wrap: wrap;
+    }
+  }
+  @media (pointer: coarse) {
+    [data-enterprise-demo] button {
+      min-height: 44px;
+    }
+    [data-enterprise-demo] :is(input, textarea, select) {
+      font-size: 16px;
+    }
+  }
+</style>
+<div
+  id="zhihui-knowledge"
+  data-enterprise-demo
+  aria-label="知汇企业知识库产品演示"
+></div>
+<script>
+  // 初始化知识库的可交互示例，内容与权限变更仅作用于演示数据。
+  (function initializeZhihuiKnowledge() {
+    const root = document.getElementById("zhihui-knowledge");
+    const spaces = [
+      { id: 1, name: "团队手册", restricted: false },
+      { id: 2, name: "项目协作", restricted: false },
+      { id: 3, name: "受限管理区", restricted: true },
+    ];
+    const navigation = [
+      ["spaces", "文档空间", "folder-open"],
+      ["search", "全文检索", "search"],
+      ["templates", "模板库", "layout-template"],
+      ["import", "导入资料", "upload"],
+      ["permissions", "空间权限", "shield-check"],
+      ["storage", "用量与服务", "hard-drive"],
+    ];
+    const firstContent =
+      "适用范围\n适用于项目组之间的资料交接，以及项目负责人变更时的工作移交。\n\n交接准备\n原负责人整理客户确认事项、交付清单和待办事项，标明当前文档版本。新负责人在接手前核对资料是否齐全。\n\n交接步骤\n1. 在项目空间建立交接页面，关联现有方案和会议记录。\n2. 原负责人逐项说明当前进展、关键约定及尚未解决的问题。\n3. 新负责人确认接收，并将后续动作记录在页面中。\n\n维护要求\n交接完成后由新负责人更新后续进展。重要修改保存为新版本，参与人员可在评论中补充问题。";
+    const initial = {
+      version: 1,
+      revision: 0,
+      page: "spaces",
+      role: "admin",
+      space: "all",
+      selected: 1,
+      editing: false,
+      readVersion: null,
+      query: "交接",
+      imported: false,
+      importStep: 0,
+      notice: "",
+      access: { 1: "edit", 2: "read" },
+      docs: [
+        {
+          id: 1,
+          space: 1,
+          title: "项目交接规范",
+          owner: "林悦",
+          updated: "2026-11-12",
+          versions: [
+            {
+              number: 1,
+              content:
+                "适用范围\n适用于项目负责人变更时的工作移交。\n\n交接清单\n确认客户约定、当前进展和后续待办。",
+              date: "2026-11-05",
+              by: "林悦",
+            },
+            {
+              number: 2,
+              content: firstContent,
+              date: "2026-11-12",
+              by: "林悦",
+            },
+          ],
+          comments: [{ by: "许宁", text: "建议交接时一起核对最新方案版本。" }],
+        },
+        {
+          id: 2,
+          space: 2,
+          title: "客户项目启动会议记录",
+          owner: "许宁",
+          updated: "2026-11-11",
+          versions: [
+            {
+              number: 1,
+              content:
+                "会议目标\n确认项目范围、参与人员和下一阶段安排。\n\n已确认事项\n先整理现有资料，再安排业务流程演示。\n\n后续动作\n交接资料目录，确认项目负责人和下次沟通时间。",
+              date: "2026-11-11",
+              by: "许宁",
+            },
+          ],
+          comments: [],
+        },
+        {
+          id: 3,
+          space: 1,
+          title: "新人入职资料清单",
+          owner: "林悦",
+          updated: "2026-11-10",
+          versions: [
+            {
+              number: 1,
+              content:
+                "第一天\n开通工作账号，阅读团队手册。\n\n第一周\n了解项目流程，跟随负责人完成一次资料交接。\n\n学习记录\n记录问题，并在周会上反馈。",
+              date: "2026-11-10",
+              by: "林悦",
+            },
+          ],
+          comments: [],
+        },
+        {
+          id: 4,
+          space: 3,
+          title: "年度预算讨论纪要",
+          owner: "林悦",
+          updated: "2026-11-09",
+          versions: [
+            {
+              number: 1,
+              content:
+                "预算讨论记录\n本空间供经授权的管理人员查看。\n\n待确认事项\n年度项目预算、采购安排和审批责任。",
+              date: "2026-11-09",
+              by: "林悦",
+            },
+          ],
+          comments: [],
+        },
+      ],
+    };
+    let state = JSON.parse(JSON.stringify(initial));
+    const saved = window.openai?.widgetState?.privateContent;
+    if (saved?.version === 1 && Array.isArray(saved.docs))
+      state = { ...state, ...saved, notice: "", editing: false };
+    // 将业务文本安全放入页面与属性。
+    function esc(value) {
+      const span = document.createElement("span");
+      span.textContent = String(value ?? "");
+      return span.innerHTML.replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+    }
+    // 生成由宿主绘制的装饰图标。
+    function icon(name) {
+      return '<i data-lucide="' + name + '" aria-hidden="true"></i>';
+    }
+    // 为本地演示动作创建明确的按钮。
+    function button(text, action, kind = "", extra = "") {
+      return (
+        '<button type="button" class="ep-button ' +
+        kind +
+        '" data-action="' +
+        action +
+        '" ' +
+        extra +
+        ">" +
+        text +
+        "</button>"
+      );
+    }
+    // 按标识取得文档，所有页面使用同一份数据。
+    function doc(id = state.selected) {
+      for (const item of state.docs) if (item.id === Number(id)) return item;
+      return null;
+    }
+    // 返回文档所属空间。
+    function spaceFor(id) {
+      for (const item of spaces) if (item.id === Number(id)) return item;
+      return spaces[0];
+    }
+    // 根据空间限制决定是否允许查看文档，检索沿用同一规则。
+    function canRead(item) {
+      return (
+        item && (state.role === "admin" || !spaceFor(item.space).restricted)
+      );
+    }
+    // 空间管理员可维护全部文档，成员编辑能力来自空间授权。
+    function canEdit(item) {
+      return (
+        canRead(item) &&
+        (state.role === "admin" || state.access[item.space] === "edit")
+      );
+    }
+    // 读取文档当前版本，历史版本与当前正文分别展示。
+    function latest(item) {
+      return item.versions[item.versions.length - 1];
+    }
+    // 为保存版本记录北京时间。
+    function today() {
+      return new Intl.DateTimeFormat("sv-SE", {
+        timeZone: "Asia/Shanghai",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date());
+    }
+    // 将演示快照交给宿主保存，并提供当前查看内容供后续讨论。
+    function remember() {
+      if (!window.openai?.setWidgetState) return;
+      state.revision++;
+      window.openai
+        .setWidgetState({
+          modelContent: {
+            product: "知汇企业知识库",
+            page: state.page,
+            document: doc()?.title,
+            role: state.role,
+          },
+          privateContent: JSON.parse(JSON.stringify(state)),
+        })
+        .catch(
+          /* 宿主存储不可用时继续使用内存中的数据。 */ function ignoreSaveFailure() {},
+        );
+    }
+    // 渲染模块标题及操作。
+    function heading(title, subtitle, actions = "") {
+      return (
+        '<div class="ep-heading"><div><h1>' +
+        esc(title) +
+        "</h1><p>" +
+        esc(subtitle) +
+        '</p></div><div class="ep-actions">' +
+        actions +
+        "</div></div>"
+      );
+    }
+    // 生成文档行，列表仅显示调用方已确认可读的记录。
+    function docRow(item) {
+      return (
+        '<tr><td><button class="ep-link" data-action="open-doc" data-id="' +
+        item.id +
+        '">' +
+        icon("file-text") +
+        " " +
+        esc(item.title) +
+        "</button></td><td>" +
+        spaceFor(item.space).name +
+        "</td><td>" +
+        item.owner +
+        "</td><td>" +
+        item.updated +
+        '</td><td><span class="ep-tag">' +
+        (canEdit(item) ? "可编辑" : "只读") +
+        "</span></td></tr>"
+      );
+    }
+    // 展示空间目录与对应文档。
+    function spacesPage() {
+      let tabs = button(
+        "全部空间",
+        "space",
+        "",
+        'data-id="all" aria-pressed="' + (state.space === "all") + '"',
+      );
+      for (const space of spaces)
+        if (state.role === "admin" || !space.restricted)
+          tabs += button(
+            space.name,
+            "space",
+            "",
+            'data-id="' +
+              space.id +
+              '" aria-pressed="' +
+              (state.space === String(space.id)) +
+              '"',
+          );
+      let rows = "";
+      for (const item of state.docs)
+        if (
+          canRead(item) &&
+          (state.space === "all" || String(item.space) === state.space)
+        )
+          rows += docRow(item);
+      return (
+        heading("文档空间", "按团队与项目组织知识") +
+        '<div class="ep-filters">' +
+        tabs +
+        '</div><div class="ep-table-wrap"><table><thead><tr><th>文档名称</th><th>空间</th><th>更新人</th><th>更新时间</th><th>权限</th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table></div>"
+      );
+    }
+    // 根据空间读写权限展示正文、编辑和评论入口，以及同空间目录。
+    function documentPage() {
+      const item = doc();
+      if (!canRead(item)) return spacesPage();
+      const current = latest(item);
+      let tree = "";
+      for (const related of state.docs)
+        if (canRead(related) && related.space === item.space)
+          tree +=
+            '<button class="ep-link" data-action="open-doc" data-id="' +
+            related.id +
+            '">' +
+            esc(related.title) +
+            "</button>";
+      let comments = "";
+      for (const comment of item.comments)
+        comments +=
+          '<div class="ep-comment"><span class="ep-small ep-muted">' +
+          esc(comment.by) +
+          "</span><p>" +
+          esc(comment.text) +
+          "</p></div>";
+      const controls =
+        button("版本记录", "versions") +
+        (canEdit(item)
+          ? button(
+              state.editing ? "保存文档" : "编辑文档",
+              state.editing ? "save-doc" : "edit-doc",
+              "primary",
+            )
+          : "");
+      return (
+        heading(item.title, spaceFor(item.space).name + " / 文档", controls) +
+        '<div class="ep-split"><article class="ep-document"><h2>' +
+        esc(item.title) +
+        '</h2><div class="ep-docmeta">' +
+        item.owner +
+        " 更新于 " +
+        item.updated +
+        " · 版本 " +
+        current.number +
+        " · " +
+        (canEdit(item) ? "可编辑" : "只读") +
+        "</div>" +
+        (state.editing
+          ? '<label class="ep-label">正文<textarea class="ep-field" id="zh-content" style="min-height:350px" maxlength="4000">' +
+            esc(current.content) +
+            "</textarea></label>"
+          : '<div class="ep-article">' + esc(current.content) + "</div>") +
+        '<div class="ep-comment"><h3>评论</h3>' +
+        comments +
+        (canEdit(item)
+          ? '<label class="ep-label">添加评论<textarea class="ep-field" id="zh-comment" style="min-height:75px" maxlength="300" placeholder="补充问题或反馈"></textarea></label>' +
+            button("发表评论", "add-comment")
+          : '<p class="ep-small ep-muted">当前空间只读</p>') +
+        '</div></article><aside class="ep-panel"><h3>' +
+        spaceFor(item.space).name +
+        '</h3><div class="ep-tree">' +
+        tree +
+        "</div></aside></div>"
+      );
+    }
+    // 从可读文档标题及当前正文中执行关键词检索。
+    function searchPage() {
+      let results = "";
+      let count = 0;
+      const query = state.query.trim().toLocaleLowerCase();
+      for (const item of state.docs)
+        if (
+          canRead(item) &&
+          query &&
+          (item.title + " " + latest(item).content)
+            .toLocaleLowerCase()
+            .includes(query)
+        ) {
+          count++;
+          results +=
+            '<article class="ep-result"><button class="ep-link" data-action="open-doc" data-id="' +
+            item.id +
+            '"><h2>' +
+            esc(item.title) +
+            '</h2></button><p class="ep-small ep-muted">' +
+            spaceFor(item.space).name +
+            " · " +
+            item.updated +
+            "</p><p>" +
+            esc(latest(item).content.slice(0, 130)) +
+            "…</p></article>";
+        }
+      return (
+        heading("全文检索", "搜索当前权限范围内的标题与正文") +
+        '<div class="ep-search"><input class="ep-field" id="zh-search" aria-label="检索关键词" value="' +
+        esc(state.query) +
+        '" placeholder="输入关键词">' +
+        button("搜索", "run-search", "primary") +
+        '</div><section class="ep-panel"><p class="ep-small ep-muted">找到 ' +
+        count +
+        " 篇文档</p>" +
+        (results || '<div class="ep-empty">没有匹配的文档</div>') +
+        "</section>"
+      );
+    }
+    // 查看历史正文并允许有编辑权限的成员将其恢复为新的当前版本。
+    function versionsPage() {
+      const item = doc();
+      if (!canRead(item)) return spacesPage();
+      let choices = "";
+      for (let index = item.versions.length - 1; index >= 0; index--)
+        choices += button(
+          "版本 " + item.versions[index].number,
+          "read-version",
+          "",
+          'data-id="' +
+            index +
+            '" aria-pressed="' +
+            (Number(state.readVersion) === index) +
+            '"',
+        );
+      const selected =
+        item.versions[state.readVersion ?? item.versions.length - 1] ||
+        latest(item);
+      return (
+        heading("版本记录", item.title, button("返回文档", "back-doc")) +
+        '<div class="ep-filters">' +
+        choices +
+        '</div><article class="ep-document"><div class="ep-heading"><div><h2>版本 ' +
+        selected.number +
+        "</h2><p>" +
+        selected.by +
+        " · " +
+        selected.date +
+        "</p></div>" +
+        (canEdit(item) ? button("恢复为新版本", "restore-version") : "") +
+        '</div><div class="ep-article">' +
+        esc(selected.content) +
+        "</div></article>"
+      );
+    }
+    // 提供可直接创建文档的业务模板。
+    function templatesPage() {
+      return (
+        heading("模板库", "从统一结构开始整理资料") +
+        '<div class="ep-grid"><section class="ep-panel ep-template"><h2>项目复盘</h2><p class="ep-muted">项目目标、实际结果、经验与改进行动。</p>' +
+        button("使用模板", "create-template", "primary", 'data-id="review"') +
+        '</section><section class="ep-panel ep-template"><h2>交接清单</h2><p class="ep-muted">当前进展、关键资料、未结事项与责任人。</p>' +
+        button("使用模板", "create-template", "primary", 'data-id="handover"') +
+        "</section></div>"
+      );
+    }
+    // 展示样例导入的内容范围和可重复执行的结果。
+    function importPage() {
+      return (
+        heading("导入资料", "使用内置 Markdown 样例演示导入") +
+        '<section class="ep-panel"><h2>团队手册导入样例</h2><div class="ep-table-wrap" style="margin:20px 0"><table><thead><tr><th>文件</th><th>目标空间</th><th>校验</th></tr></thead><tbody><tr><td>项目资料目录.md</td><td>团队手册</td><td>可导入</td></tr><tr><td>会议记录规范.md</td><td>团队手册</td><td>可导入</td></tr><tr><td>空白文档.md</td><td>团队手册</td><td class="ep-error">正文为空</td></tr></tbody></table></div><p class="ep-small ep-muted">文档标题、正文与来源标识一同检查，重复来源跳过。</p><div class="ep-actions" style="margin-top:19px">' +
+        (state.role === "admin" || state.access[1] === "edit"
+          ? button("校验并导入示例", "run-import", "primary")
+          : '<span class="ep-tag">目标空间只读</span>') +
+        "</div>" +
+        (state.importStep
+          ? '<div class="ep-comment"><h3>导入结果</h3><p>' +
+            esc(state.importResult) +
+            '</p><p class="ep-small ep-error">空白文档.md 未创建，补齐正文后重试。</p></div>'
+          : "") +
+        "</section>"
+      );
+    }
+    // 管理员调整普通成员的空间读写权限，受限空间保持管理员可见。
+    function permissionsPage() {
+      let rows = "";
+      for (const space of spaces)
+        rows +=
+          "<tr><td>" +
+          space.name +
+          "</td><td>" +
+          (space.restricted ? "仅管理员" : "全体成员") +
+          "</td><td>" +
+          (space.restricted
+            ? "受限"
+            : state.role === "admin"
+              ? '<select class="ep-field" data-access="' +
+                space.id +
+                '" aria-label="' +
+                space.name +
+                '成员权限"><option value="read" ' +
+                (state.access[space.id] === "read" ? "selected" : "") +
+                '>只读</option><option value="edit" ' +
+                (state.access[space.id] === "edit" ? "selected" : "") +
+                ">可编辑</option></select>"
+              : state.access[space.id] === "edit"
+                ? "可编辑"
+                : "只读") +
+          "</td><td>林悦</td></tr>";
+      return (
+        heading("空间权限", "搜索、目录与正文使用相同的访问范围") +
+        '<div class="ep-table-wrap"><table><thead><tr><th>空间</th><th>可访问成员</th><th>成员权限</th><th>空间管理员</th></tr></thead><tbody>' +
+        rows +
+        '</tbody></table></div><section class="ep-panel" style="margin-top:20px"><h3>成员角色</h3><p class="ep-muted" style="margin-top:10px">管理员可维护全部空间和授权。普通成员按空间权限阅读、编辑，受限管理区的文档不会出现在其目录或搜索结果中。</p></section>'
+      );
+    }
+    // 展示团队版容量、账号与服务信息，存量为演示租户的样例快照。
+    function storagePage() {
+      return (
+        heading("用量与服务", "团队版年度订阅") +
+        '<div class="ep-grid"><section class="ep-panel"><h2>附件存储</h2><p style="font-size:25px;margin-top:22px">12.6 <span class="ep-small ep-muted">/ 100 GB</span></p><div class="ep-meter" role="progressbar" aria-label="附件存储使用比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12.6"><span></span></div><p class="ep-small ep-muted">演示租户存量快照，包含历史附件。</p></section><section class="ep-panel"><h2>成员账号</h2><p style="font-size:25px;margin-top:22px">32 <span class="ep-small ep-muted">/ 50 个</span></p><p class="ep-small ep-muted" style="margin-top:18px">包含管理员与普通成员账号。</p></section></div><section class="ep-panel" style="margin-top:20px"><h2>订阅与服务</h2><dl class="ep-facts"><div><dt>年度价格</dt><dd>¥18,000 / 年</dd></div><div><dt>标准上线周期</dt><dd>1–2 周</dd></div><div><dt>标准服务</dt><dd>初始化、权限配置指导、一次培训</dd></div><div><dt>扩容与集成</dt><dd>按需求另行评估</dd></div></dl></section>'
+      );
+    }
+    // 渲染当前知识库模块及全局体验角色。
+    function render() {
+      let content = "";
+      switch (state.page) {
+        case "document":
+          content = documentPage();
+          break;
+        case "search":
+          content = searchPage();
+          break;
+        case "versions":
+          content = versionsPage();
+          break;
+        case "templates":
+          content = templatesPage();
+          break;
+        case "import":
+          content = importPage();
+          break;
+        case "permissions":
+          content = permissionsPage();
+          break;
+        case "storage":
+          content = storagePage();
+          break;
+        default:
+          content = spacesPage();
+      }
+      let nav = "";
+      for (const item of navigation)
+        nav +=
+          '<button class="ep-nav" data-action="navigate" data-page="' +
+          item[0] +
+          '" ' +
+          (state.page === item[0] ||
+          (["document", "versions"].includes(state.page) &&
+            item[0] === "spaces")
+            ? 'aria-current="page"'
+            : "") +
+          ">" +
+          icon(item[2]) +
+          item[1] +
+          "</button>";
+      root.innerHTML =
+        '<div class="ep-shell"><aside class="ep-rail"><div class="ep-logo"><span class="ep-mark">' +
+        icon("book-open") +
+        '</span>知汇</div><nav aria-label="知识库导航">' +
+        nav +
+        '</nav><div class="ep-account">林悦<p class="ep-small ep-muted">团队版 · 演示数据</p></div></aside><main class="ep-main"><header class="ep-top"><span class="ep-muted">明川演示工作区</span><label>体验角色<select class="ep-role" id="zh-role"><option value="admin" ' +
+        (state.role === "admin" ? "selected" : "") +
+        '>管理员</option><option value="member" ' +
+        (state.role === "member" ? "selected" : "") +
+        '>普通成员</option></select></label></header><div class="ep-page">' +
+        content +
+        "</div>" +
+        (state.notice
+          ? '<div class="ep-notice" role="status">' +
+            esc(state.notice) +
+            "</div>"
+          : "") +
+        "</main></div>";
+      if (globalThis.lucide)
+        lucide.createIcons({ attrs: { width: 17, height: 17 } });
+    }
+    // 处理文档阅读、版本保存、评论、模板创建和样例导入。
+    function onClick(event) {
+      const target = event.target.closest("[data-action]");
+      if (!target || !root.contains(target)) return;
+      const action = target.dataset.action;
+      state.notice = "";
+      if (action === "navigate") {
+        state.page = target.dataset.page;
+        state.editing = false;
+      }
+      if (action === "space") state.space = target.dataset.id;
+      if (action === "open-doc") {
+        const item = doc(target.dataset.id);
+        if (!canRead(item)) return;
+        state.selected = item.id;
+        state.page = "document";
+        state.editing = false;
+      }
+      if (action === "edit-doc" && canEdit(doc())) state.editing = true;
+      if (action === "save-doc" && canEdit(doc())) {
+        const input = root.querySelector("#zh-content");
+        const text = input.value.trim();
+        if (!text) {
+          input.focus();
+          return;
+        }
+        const item = doc();
+        item.versions.push({
+          number: latest(item).number + 1,
+          content: text,
+          date: today(),
+          by: "林悦",
+        });
+        item.updated = today();
+        state.editing = false;
+        state.notice = "已保存为新版本";
+      }
+      if (action === "add-comment" && canEdit(doc())) {
+        const input = root.querySelector("#zh-comment");
+        const text = input.value.trim();
+        if (!text) {
+          input.focus();
+          return;
+        }
+        doc().comments.push({ by: "林悦", text });
+        state.notice = "评论已添加";
+      }
+      if (action === "versions") {
+        state.page = "versions";
+        state.readVersion = doc().versions.length - 1;
+      }
+      if (action === "read-version")
+        state.readVersion = Number(target.dataset.id);
+      if (action === "back-doc") state.page = "document";
+      if (action === "restore-version" && canEdit(doc())) {
+        const item = doc();
+        const content = (item.versions[state.readVersion] || latest(item))
+          .content;
+        item.versions.push({
+          number: latest(item).number + 1,
+          content,
+          date: today(),
+          by: "林悦",
+        });
+        item.updated = today();
+        state.page = "document";
+        state.notice = "历史正文已恢复为新版本，旧版本与评论继续保留";
+      }
+      if (action === "run-search")
+        state.query = root.querySelector("#zh-search").value.trim();
+      if (action === "create-template") {
+        if (state.role !== "admin" && state.access[1] !== "edit") {
+          state.notice = "团队手册当前只读，请联系管理员授权";
+          render();
+          return;
+        }
+        let id = 0;
+        for (const item of state.docs) id = Math.max(id, item.id);
+        id++;
+        const title = target.dataset.id === "review" ? "项目复盘" : "交接清单";
+        const content =
+          target.dataset.id === "review"
+            ? "项目目标\n填写本次项目目标。\n\n实际结果\n记录已完成的事项。\n\n经验与改进\n补充后续行动和责任人。"
+            : "当前进展\n填写项目现状。\n\n关键资料\n列出需要移交的文档。\n\n未结事项\n确认负责人和完成时间。";
+        state.docs.push({
+          id,
+          space: 1,
+          title: title + " " + id,
+          owner: "林悦",
+          updated: today(),
+          versions: [{ number: 1, content, date: today(), by: "林悦" }],
+          comments: [],
+        });
+        state.selected = id;
+        state.page = "document";
+        state.editing = true;
+      }
+      if (
+        action === "run-import" &&
+        (state.role === "admin" || state.access[1] === "edit")
+      ) {
+        let added = 0;
+        for (const title of ["项目资料目录", "会议记录规范"]) {
+          let duplicate = false;
+          for (const item of state.docs)
+            if (item.importKey === title) duplicate = true;
+          if (!duplicate) {
+            let id = 0;
+            for (const item of state.docs) id = Math.max(id, item.id);
+            state.docs.push({
+              id: id + 1,
+              space: 1,
+              title,
+              importKey: title,
+              owner: "林悦",
+              updated: today(),
+              versions: [
+                {
+                  number: 1,
+                  content: title + "\n整理当前可用资料，并确认维护负责人。",
+                  date: today(),
+                  by: "林悦",
+                },
+              ],
+              comments: [],
+            });
+            added++;
+          }
+        }
+        state.importStep = 1;
+        state.importResult =
+          "新增 " + added + " 篇，重复跳过 " + (2 - added) + " 篇，失败 1 篇";
+      }
+      render();
+      remember();
+    }
+    // 角色切换立即重算可见范围，空间权限调整作用于成员编辑能力。
+    function onChange(event) {
+      const target = event.target;
+      if (target.id === "zh-role") {
+        state.role = target.value;
+        state.page = "spaces";
+        state.space = "all";
+        state.editing = false;
+        state.notice = "";
+      } else if (target.dataset.access && state.role === "admin") {
+        state.access[target.dataset.access] = target.value;
+        state.notice = "空间成员权限已更新";
+      } else return;
+      render();
+      remember();
+    }
+    // 搜索框使用 Enter 执行检索，避免输入过程中反复重绘。
+    function onKeydown(event) {
+      if (
+        event.target.id === "zh-search" &&
+        event.key === "Enter" &&
+        !event.isComposing
+      ) {
+        event.preventDefault();
+        state.query = event.target.value.trim();
+        render();
+        remember();
+      }
+    }
+    // 仅恢复较新的兼容快照，防止过时回传覆盖编辑结果。
+    function onGlobals(event) {
+      const next = event.detail?.globals?.widgetState?.privateContent;
+      if (
+        next?.version === 1 &&
+        next.revision > state.revision &&
+        Array.isArray(next.docs)
+      ) {
+        state = { ...state, ...next };
+        render();
+      }
+    }
+    root.addEventListener("click", onClick);
+    root.addEventListener("change", onChange);
+    root.addEventListener("keydown", onKeydown);
+    window.addEventListener("openai:set_globals", onGlobals);
+    render();
+  })();
+</script>

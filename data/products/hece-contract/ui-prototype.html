@@ -1,0 +1,1528 @@
+<style>
+  [data-enterprise-demo] {
+    color-scheme: light dark;
+    --ep-bg: light-dark(#f4f7f8, #121c22);
+    --ep-paper: light-dark(#fff, #1b2831);
+    --ep-ink: light-dark(#263b43, #e3edf0);
+    --ep-sub: light-dark(#687e87, #a5bac3);
+    --ep-line: light-dark(#dfe8eb, #354b56);
+    --ep-brand: light-dark(#167b78, #7ad5ce);
+    --ep-soft: light-dark(#e7f3f1, #203d40);
+    --ep-red: light-dark(#b43e43, #ffa0a5);
+    font:
+      14px/1.65 "Geist",
+      "PingFang SC",
+      "Microsoft YaHei",
+      sans-serif;
+    color: var(--ep-ink);
+  }
+  [data-enterprise-demo] * {
+    box-sizing: border-box;
+  }
+  [data-enterprise-demo] [hidden] {
+    display: none !important;
+  }
+  [data-enterprise-demo] button,
+  [data-enterprise-demo] input,
+  [data-enterprise-demo] textarea,
+  [data-enterprise-demo] select {
+    font: inherit;
+  }
+  [data-enterprise-demo] button {
+    cursor: pointer;
+  }
+  [data-enterprise-demo] :is(button, input, textarea, select):focus-visible {
+    outline: 3px solid var(--ep-brand);
+    outline-offset: 3px;
+  }
+  [data-enterprise-demo] :is(h1, h2, h3, p) {
+    margin: 0;
+  }
+  [data-enterprise-demo] h1 {
+    font-size: 24px;
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  [data-enterprise-demo] h2 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+  [data-enterprise-demo] h3 {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  [data-enterprise-demo] .ep-shell {
+    display: grid;
+    grid-template-columns: 166px minmax(0, 1fr);
+    min-height: 748px;
+    border: 1px solid var(--ep-line);
+    border-radius: 14px;
+    overflow: clip;
+    background: var(--ep-bg);
+  }
+  [data-enterprise-demo] .ep-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 27px;
+    padding: 24px 12px;
+    border-right: 1px solid var(--ep-line);
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] .ep-logo {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 650;
+    white-space: nowrap;
+    padding: 0 8px;
+  }
+  [data-enterprise-demo] .ep-mark {
+    width: 28px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+    background: var(--ep-brand);
+    color: light-dark(#fff, #142e33);
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  [data-enterprise-demo] .ep-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-align: left;
+    padding: 11px 12px;
+    background: transparent;
+    color: var(--ep-sub);
+    border: 0;
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] .ep-nav[aria-current="page"] {
+    background: var(--ep-soft);
+    color: var(--ep-brand);
+    font-weight: 600;
+  }
+  [data-enterprise-demo] .ep-account {
+    margin-top: auto;
+    border-top: 1px solid var(--ep-line);
+    padding: 16px 8px 0;
+  }
+  [data-enterprise-demo] .ep-main {
+    min-width: 0;
+  }
+  [data-enterprise-demo] .ep-top {
+    min-height: 64px;
+    padding: 15px 110px 15px 27px;
+    background: var(--ep-paper);
+    border-bottom: 1px solid var(--ep-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  [data-enterprise-demo] .ep-top label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--ep-sub);
+  }
+  [data-enterprise-demo] .ep-role {
+    border: 0;
+    background: var(--ep-paper);
+    color: var(--ep-ink);
+    max-width: 135px;
+  }
+  [data-enterprise-demo] .ep-page {
+    padding: 28px;
+  }
+  [data-enterprise-demo] .ep-muted {
+    color: var(--ep-sub);
+  }
+  [data-enterprise-demo] .ep-small {
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 23px;
+  }
+  [data-enterprise-demo] .ep-heading p {
+    margin-top: 5px;
+    color: var(--ep-sub);
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  [data-enterprise-demo] .ep-button {
+    border: 1px solid var(--ep-line);
+    border-radius: 7px;
+    padding: 8px 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: var(--ep-paper);
+    color: var(--ep-ink);
+    white-space: nowrap;
+  }
+  [data-enterprise-demo] .ep-button.primary {
+    background: var(--ep-brand);
+    border-color: var(--ep-brand);
+    color: light-dark(#fff, #142e33);
+  }
+  [data-enterprise-demo] .ep-button.quiet {
+    color: var(--ep-sub);
+    border-color: transparent;
+    background: transparent;
+  }
+  [data-enterprise-demo] .ep-button.danger {
+    color: var(--ep-red);
+  }
+  [data-enterprise-demo] .ep-button[aria-pressed="true"] {
+    color: var(--ep-brand);
+    background: var(--ep-soft);
+    border-color: var(--ep-brand);
+  }
+  [data-enterprise-demo] .ep-link {
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--ep-brand);
+    background: transparent;
+    text-align: left;
+  }
+  [data-enterprise-demo] .ep-field {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--ep-line);
+    border-radius: 7px;
+    padding: 10px 12px;
+    color: var(--ep-ink);
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] .ep-label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 15px 0;
+    font-size: 12px;
+  }
+  [data-enterprise-demo] textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+  [data-enterprise-demo] .ep-panel {
+    padding: 22px;
+    background: var(--ep-paper);
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+    min-width: 0;
+  }
+  [data-enterprise-demo] .ep-panel + .ep-panel {
+    margin-top: 19px;
+  }
+  [data-enterprise-demo] .ep-table-wrap {
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+    overflow: auto;
+    background: var(--ep-paper);
+  }
+  [data-enterprise-demo] table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 12px;
+  }
+  [data-enterprise-demo] th,
+  [data-enterprise-demo] td {
+    padding: 16px 14px;
+    border-bottom: 1px solid var(--ep-line);
+    vertical-align: top;
+  }
+  [data-enterprise-demo] th {
+    color: var(--ep-sub);
+    font-weight: 500;
+    background: var(--ep-bg);
+    white-space: nowrap;
+  }
+  [data-enterprise-demo] tr:last-child td {
+    border-bottom: 0;
+  }
+  [data-enterprise-demo] .ep-tag {
+    display: inline-block;
+    background: var(--ep-soft);
+    color: var(--ep-brand);
+    font-size: 11px;
+    border-radius: 5px;
+    padding: 2px 7px;
+  }
+  [data-enterprise-demo] .ep-filters {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  [data-enterprise-demo] .ep-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 235px;
+    gap: 18px;
+  }
+  [data-enterprise-demo] .ep-document {
+    padding: 30px 32px;
+    background: var(--ep-paper);
+    border: 1px solid var(--ep-line);
+    border-radius: 10px;
+  }
+  [data-enterprise-demo] .ep-article {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.95;
+    margin-top: 24px;
+  }
+  [data-enterprise-demo] .ep-docmeta {
+    color: var(--ep-sub);
+    font-size: 11px;
+    margin-top: 9px;
+    padding-bottom: 17px;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 18px;
+  }
+  [data-enterprise-demo] .ep-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-row:last-child {
+    border-bottom: 0;
+  }
+  [data-enterprise-demo] .ep-comment {
+    border-top: 1px solid var(--ep-line);
+    margin-top: 25px;
+    padding-top: 18px;
+  }
+  [data-enterprise-demo] .ep-comment p {
+    white-space: pre-wrap;
+    margin-top: 7px;
+  }
+  [data-enterprise-demo] .ep-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+  }
+  [data-enterprise-demo] .ep-grid .ep-panel {
+    margin-top: 0;
+  }
+  [data-enterprise-demo] .ep-template {
+    min-height: 215px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  [data-enterprise-demo] .ep-template p {
+    flex: 1;
+  }
+  [data-enterprise-demo] .ep-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 23px;
+  }
+  [data-enterprise-demo] .ep-result {
+    padding: 21px 0;
+    border-bottom: 1px solid var(--ep-line);
+  }
+  [data-enterprise-demo] .ep-result p {
+    margin-top: 8px;
+  }
+  [data-enterprise-demo] .ep-empty {
+    text-align: center;
+    color: var(--ep-sub);
+    padding: 40px 15px;
+  }
+  [data-enterprise-demo] .ep-notice {
+    margin: 0 28px 20px;
+    padding: 11px 14px;
+    color: var(--ep-brand);
+    background: var(--ep-soft);
+    border-radius: 7px;
+  }
+  [data-enterprise-demo] .ep-meter {
+    margin: 18px 0;
+    height: 12px;
+    border-radius: 7px;
+    overflow: hidden;
+    background: var(--ep-bg);
+  }
+  [data-enterprise-demo] .ep-meter span {
+    display: block;
+    height: 100%;
+    width: 12.6%;
+    background: var(--ep-brand);
+  }
+  [data-enterprise-demo] .ep-facts {
+    margin: 18px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 19px;
+  }
+  [data-enterprise-demo] .ep-facts dt {
+    color: var(--ep-sub);
+    font-size: 12px;
+  }
+  [data-enterprise-demo] .ep-facts dd {
+    margin: 5px 0 0;
+  }
+  [data-enterprise-demo] .ep-error {
+    color: var(--ep-red);
+  }
+  @media (max-width: 850px) {
+    [data-enterprise-demo] .ep-shell {
+      grid-template-columns: 140px minmax(0, 1fr);
+    }
+    [data-enterprise-demo] .ep-rail {
+      padding: 24px 8px;
+    }
+    [data-enterprise-demo] .ep-logo {
+      padding: 0;
+      font-size: 16px;
+    }
+    [data-enterprise-demo] .ep-page {
+      padding: 23px 18px;
+    }
+    [data-enterprise-demo] .ep-split {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-document {
+      padding: 25px;
+    }
+  }
+  @media (max-width: 580px) {
+    [data-enterprise-demo] .ep-shell {
+      display: block;
+    }
+    [data-enterprise-demo] .ep-rail {
+      border-right: 0;
+      border-bottom: 1px solid var(--ep-line);
+      gap: 15px;
+      padding: 16px;
+    }
+    [data-enterprise-demo] nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    [data-enterprise-demo] .ep-nav {
+      padding: 8px;
+    }
+    [data-enterprise-demo] .ep-account {
+      display: none;
+    }
+    [data-enterprise-demo] .ep-top {
+      padding: 14px 18px;
+    }
+    [data-enterprise-demo] .ep-grid {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-facts {
+      grid-template-columns: 1fr;
+    }
+    [data-enterprise-demo] .ep-search {
+      flex-wrap: wrap;
+    }
+  }
+  @media (pointer: coarse) {
+    [data-enterprise-demo] button {
+      min-height: 44px;
+    }
+    [data-enterprise-demo] :is(input, textarea, select) {
+      font-size: 16px;
+    }
+  }
+</style>
+<!-- 合策合同管理界面演示，业务数据与服务条款均为虚构训练设定。 -->
+<style>
+  #hece-contract {
+    --ep-brand: light-dark(#30598f, #9ebfee);
+    --ep-soft: light-dark(#eaf0f9, #263951);
+  }
+  #hece-contract .hc-statuses {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  #hece-contract .hc-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin: 18px 0;
+  }
+  #hece-contract .hc-step {
+    border-bottom: 3px solid var(--ep-line);
+    padding: 9px 18px;
+    color: var(--ep-sub);
+  }
+  #hece-contract .hc-step.active {
+    border-color: var(--ep-brand);
+    color: var(--ep-brand);
+  }
+  #hece-contract .hc-number {
+    font-size: 25px;
+    margin-top: 12px;
+  }
+  #hece-contract .hc-chart {
+    display: grid;
+    gap: 17px;
+    margin-top: 20px;
+  }
+  #hece-contract .hc-bar-row {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr) 20px;
+    align-items: center;
+    gap: 12px;
+  }
+  #hece-contract .hc-track {
+    height: 21px;
+    background: var(--ep-bg);
+    border-radius: 4px;
+  }
+  #hece-contract .hc-bar {
+    height: 100%;
+    background: var(--ep-brand);
+    border-radius: 4px;
+  }
+  #hece-contract .hc-check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  #hece-contract .hc-check input {
+    margin-top: 6px;
+    accent-color: var(--ep-brand);
+  }
+  #hece-contract .hc-done {
+    text-decoration: line-through;
+    color: var(--ep-sub);
+  }
+</style>
+<div
+  id="hece-contract"
+  data-enterprise-demo
+  aria-label="合策合同管理产品演示"
+></div>
+<script>
+  // 建立合同台账、内部审批和履约节点的独立演示状态。
+  (function initializeHeceContract() {
+    const root = document.getElementById("hece-contract");
+    const statuses = ["草稿", "审批中", "履约中", "已结束"];
+    const navigation = [
+      ["contracts", "合同台账", "files"],
+      ["approvals", "审批待办", "clipboard-check"],
+      ["milestones", "履约节点", "list-checks"],
+      ["reminders", "到期提醒", "bell"],
+      ["reports", "合同报表", "chart-no-axes-combined"],
+      ["permissions", "角色与服务", "shield-check"],
+      ["import", "导入合同", "upload"],
+    ];
+    const roleNames = {
+      admin: "管理员",
+      manager: "部门负责人",
+      member: "普通成员",
+    };
+    const initial = {
+      version: 1,
+      revision: 0,
+      page: "contracts",
+      role: "admin",
+      selected: 1,
+      statusFilter: "all",
+      milestoneFilter: "todo",
+      notice: "",
+      creating: false,
+      imported: false,
+      importStep: 0,
+      contracts: [
+        {
+          id: 1,
+          number: "HC-2026-001",
+          name: "云服务采购合同",
+          vendor: "云岚科技",
+          amount: 320000,
+          owner: "周宁",
+          department: "采购部",
+          status: "履约中",
+          start: "2026-03-01",
+          end: "2026-12-01",
+          attachment: "云服务采购合同扫描件.pdf",
+          notes: "按交付节点安排验收，付款前核对验收结果。",
+          remind: true,
+          history: [
+            {
+              date: "2026-02-25",
+              by: "采购部负责人",
+              result: "通过",
+              comment: "已确认采购范围与预算。",
+            },
+          ],
+        },
+        {
+          id: 2,
+          number: "HC-2026-002",
+          name: "设备维保服务合同",
+          vendor: "景川设备",
+          amount: 180000,
+          owner: "周宁",
+          department: "采购部",
+          status: "审批中",
+          start: "2026-12-01",
+          end: "2027-11-30",
+          attachment: "设备维保服务合同草案.pdf",
+          notes: "待确认维保响应安排。",
+          remind: true,
+          history: [],
+        },
+        {
+          id: 3,
+          number: "HC-2026-003",
+          name: "办公设备采购合同",
+          vendor: "佑禾商贸",
+          amount: 86000,
+          owner: "林悦",
+          department: "运营部",
+          status: "草稿",
+          start: "2026-12-01",
+          end: "2027-01-31",
+          attachment: "办公设备清单.xlsx",
+          notes: "待核对设备清单与付款比例。",
+          remind: true,
+          history: [],
+        },
+        {
+          id: 4,
+          number: "HC-2026-004",
+          name: "运营咨询服务合同",
+          vendor: "明川咨询",
+          amount: 160000,
+          owner: "许宁",
+          department: "采购部",
+          status: "履约中",
+          start: "2026-06-01",
+          end: "2026-11-25",
+          attachment: "咨询服务合同归档件.pdf",
+          notes: "安排最终成果交接，确认是否续约。",
+          remind: true,
+          history: [],
+        },
+        {
+          id: 5,
+          number: "HC-2026-005",
+          name: "软件年度订阅合同",
+          vendor: "观岚软件",
+          amount: 56000,
+          owner: "许宁",
+          department: "信息部",
+          status: "已结束",
+          start: "2025-11-01",
+          end: "2026-10-30",
+          attachment: "年度订阅合同.pdf",
+          notes: "原服务期已结束。",
+          remind: false,
+          history: [],
+        },
+        {
+          id: 6,
+          number: "HC-2026-006",
+          name: "生产物料框架合同",
+          vendor: "泊原材料",
+          amount: 480000,
+          owner: "顾青",
+          department: "生产部",
+          status: "履约中",
+          start: "2026-04-01",
+          end: "2027-03-01",
+          attachment: "物料框架合同.pdf",
+          notes: "按月核对交付及付款计划。",
+          remind: true,
+          history: [],
+        },
+      ],
+      milestones: [
+        {
+          id: 1,
+          contract: 1,
+          title: "提交本阶段交付清单",
+          type: "交付",
+          amount: 0,
+          due: "2026-11-18",
+          done: false,
+        },
+        {
+          id: 2,
+          contract: 1,
+          title: "第二阶段计划付款",
+          type: "付款",
+          amount: 96000,
+          due: "2026-11-20",
+          done: false,
+        },
+        {
+          id: 3,
+          contract: 1,
+          title: "首阶段交付确认",
+          type: "交付",
+          amount: 0,
+          due: "2026-05-01",
+          done: true,
+        },
+        {
+          id: 4,
+          contract: 4,
+          title: "最终成果验收",
+          type: "交付",
+          amount: 0,
+          due: "2026-11-22",
+          done: false,
+        },
+        {
+          id: 5,
+          contract: 4,
+          title: "尾款计划",
+          type: "付款",
+          amount: 32000,
+          due: "2026-11-25",
+          done: false,
+        },
+        {
+          id: 6,
+          contract: 6,
+          title: "十一月物料交付",
+          type: "交付",
+          amount: 0,
+          due: "2026-11-28",
+          done: false,
+        },
+        {
+          id: 7,
+          contract: 6,
+          title: "十一月计划付款",
+          type: "付款",
+          amount: 80000,
+          due: "2026-11-30",
+          done: false,
+        },
+      ],
+    };
+    let state = JSON.parse(JSON.stringify(initial));
+    const saved = window.openai?.widgetState?.privateContent;
+    if (saved?.version === 1 && Array.isArray(saved.contracts))
+      state = { ...state, ...saved, notice: "", creating: false };
+    // 转义所有用户填写的内容与属性。
+    function esc(value) {
+      const span = document.createElement("span");
+      span.textContent = String(value ?? "");
+      return span.innerHTML.replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+    }
+    // 生成由宿主提供的装饰图标。
+    function icon(name) {
+      return '<i data-lucide="' + name + '" aria-hidden="true"></i>';
+    }
+    // 将金额格式统一为人民币整数。
+    function money(value) {
+      return "¥" + Number(value).toLocaleString("zh-CN");
+    }
+    // 为明确的合同操作生成原生按钮。
+    function button(text, action, kind = "", extra = "") {
+      return (
+        '<button type="button" class="ep-button ' +
+        kind +
+        '" data-action="' +
+        action +
+        '" ' +
+        extra +
+        ">" +
+        text +
+        "</button>"
+      );
+    }
+    // 获取同一份合同记录。
+    function contract(id = state.selected) {
+      for (const item of state.contracts)
+        if (item.id === Number(id)) return item;
+      return null;
+    }
+    // 角色可见范围分别为本人、本部门与全公司。
+    function visible(item) {
+      return (
+        item &&
+        (state.role === "admin" ||
+          (state.role === "manager" && item.department === "采购部") ||
+          item.owner === "周宁")
+      );
+    }
+    // 仅部门负责人和管理员可审批范围内的待审批合同。
+    function canApprove(item) {
+      return (
+        visible(item) && state.role !== "member" && item.status === "审批中"
+      );
+    }
+    // 保存用于演示的记录与当前页面，拒绝旧快照覆盖新操作。
+    function remember() {
+      if (!window.openai?.setWidgetState) return;
+      state.revision++;
+      window.openai
+        .setWidgetState({
+          modelContent: {
+            product: "合策合同管理",
+            page: state.page,
+            role: roleNames[state.role],
+          },
+          privateContent: JSON.parse(JSON.stringify(state)),
+        })
+        .catch(
+          /* 宿主保存不可用时继续使用当前内存状态。 */ function ignoreSaveFailure() {},
+        );
+    }
+    // 绘制模块标题及操作区域。
+    function heading(title, subtitle, actions = "") {
+      return (
+        '<div class="ep-heading"><div><h1>' +
+        esc(title) +
+        "</h1><p>" +
+        esc(subtitle) +
+        '</p></div><div class="ep-actions">' +
+        actions +
+        "</div></div>"
+      );
+    }
+    // 根据演示基准日计算合同距到期天数。
+    function daysUntilEnd(item) {
+      return Math.round(
+        (Date.parse(item.end + "T00:00:00Z") -
+          Date.parse("2026-11-12T00:00:00Z")) /
+          86400000,
+      );
+    }
+    // 输出权限范围内的合同列表行。
+    function contractRow(item) {
+      return (
+        '<tr><td><button class="ep-link" data-action="open-contract" data-id="' +
+        item.id +
+        '">' +
+        esc(item.name) +
+        '</button><br><span class="ep-small ep-muted">' +
+        esc(item.number) +
+        "</span></td><td>" +
+        esc(item.vendor) +
+        "</td><td>" +
+        money(item.amount) +
+        '</td><td><span class="ep-tag">' +
+        item.status +
+        "</span></td><td>" +
+        item.end +
+        "</td><td>" +
+        item.owner +
+        "</td></tr>"
+      );
+    }
+    // 台账支持状态筛选及登记草稿，列表金额来自合同记录。
+    function contractsPage() {
+      let count = 0;
+      let total = 0;
+      let rows = "";
+      for (const item of state.contracts)
+        if (visible(item)) {
+          count++;
+          total += item.amount;
+          if (
+            state.statusFilter === "all" ||
+            item.status === state.statusFilter
+          )
+            rows += contractRow(item);
+        }
+      let filters = button(
+        "全部",
+        "filter-status",
+        "",
+        'data-status="all" aria-pressed="' +
+          (state.statusFilter === "all") +
+          '"',
+      );
+      for (const status of statuses)
+        filters += button(
+          status,
+          "filter-status",
+          "",
+          'data-status="' +
+            status +
+            '" aria-pressed="' +
+            (state.statusFilter === status) +
+            '"',
+        );
+      return (
+        heading(
+          "合同台账",
+          count + " 份合同，登记金额 " + money(total),
+          button(icon("plus") + "登记合同", "new-contract", "primary"),
+        ) +
+        '<div class="hc-statuses">' +
+        filters +
+        '</div><div class="ep-table-wrap"><table><thead><tr><th>合同名称 / 编号</th><th>相对方</th><th>合同金额</th><th>状态</th><th>到期日期</th><th>经办人</th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table></div>"
+      );
+    }
+    // 共用履约节点数据，合同详情和全局待办同步显示完成状态。
+    function milestoneRows(contractId = null) {
+      let rows = "";
+      for (const milestone of state.milestones) {
+        const item = contract(milestone.contract);
+        if (!visible(item) || (contractId !== null && item.id !== contractId))
+          continue;
+        if (
+          contractId === null &&
+          state.milestoneFilter === "todo" &&
+          milestone.done
+        )
+          continue;
+        if (
+          contractId === null &&
+          state.milestoneFilter === "done" &&
+          !milestone.done
+        )
+          continue;
+        rows +=
+          '<div class="ep-row"><label class="hc-check"><input type="checkbox" data-milestone="' +
+          milestone.id +
+          '" ' +
+          (milestone.done ? "checked" : "") +
+          " " +
+          (item.status !== "履约中" ? "disabled" : "") +
+          ' aria-label="完成' +
+          esc(milestone.title) +
+          '"><span><span class="' +
+          (milestone.done ? "hc-done" : "") +
+          '">' +
+          esc(milestone.title) +
+          '</span><br><span class="ep-small ep-muted">' +
+          milestone.due +
+          " · " +
+          milestone.type +
+          " · " +
+          esc(item.name) +
+          "</span></span></label><span>" +
+          (milestone.type === "付款" ? money(milestone.amount) : "交付事项") +
+          "</span></div>";
+      }
+      return rows || '<div class="ep-empty">暂无匹配节点</div>';
+    }
+    // 详情聚合合同字段、履约节点与内部审批历史。
+    function detailPage() {
+      const item = contract();
+      if (!visible(item)) return contractsPage();
+      let steps = "";
+      for (const status of statuses)
+        steps +=
+          '<span class="hc-step ' +
+          (item.status === status ? "active" : "") +
+          '">' +
+          status +
+          "</span>";
+      let history = "";
+      for (const entry of item.history)
+        history +=
+          '<div class="ep-row"><div><h3>' +
+          esc(entry.result) +
+          " · " +
+          esc(entry.by) +
+          '</h3><p class="ep-small ep-muted">' +
+          entry.date +
+          "</p><p>" +
+          esc(entry.comment || "已核对提交资料。") +
+          "</p></div></div>";
+      return (
+        heading(
+          item.name,
+          item.number + " · " + item.vendor,
+          button("返回台账", "back-contracts") +
+            (item.status === "草稿"
+              ? button("提交审批", "submit-approval", "primary")
+              : "") +
+            (canApprove(item)
+              ? button(
+                  "处理审批",
+                  "open-approval",
+                  "primary",
+                  'data-id="' + item.id + '"',
+                )
+              : ""),
+        ) +
+        '<div class="hc-steps">' +
+        steps +
+        '</div><div class="ep-split"><div><section class="ep-panel"><h2>合同信息</h2><dl class="ep-facts"><div><dt>合同金额</dt><dd>' +
+        money(item.amount) +
+        "</dd></div><div><dt>合同相对方</dt><dd>" +
+        esc(item.vendor) +
+        "</dd></div><div><dt>起始日期</dt><dd>" +
+        item.start +
+        "</dd></div><div><dt>到期日期</dt><dd>" +
+        item.end +
+        "</dd></div><div><dt>经办人</dt><dd>" +
+        item.owner +
+        "</dd></div><div><dt>部门</dt><dd>" +
+        item.department +
+        '</dd></div></dl><div class="ep-comment"><h3>附件记录</h3><p>' +
+        icon("paperclip") +
+        " " +
+        esc(item.attachment || "待补充附件") +
+        '</p><p class="ep-small ep-muted">演示展示附件名称，正式内容由经办人核实。</p></div><label class="ep-label">业务备注<textarea class="ep-field" id="hc-notes" maxlength="500">' +
+        esc(item.notes) +
+        "</textarea></label>" +
+        button("保存备注", "save-notes") +
+        '</section><section class="ep-panel"><h2>履约节点</h2>' +
+        milestoneRows(item.id) +
+        '</section></div><aside><section class="ep-panel"><h2>审批记录</h2>' +
+        (history ||
+          '<p class="ep-small ep-muted" style="margin-top:16px">暂无审批记录</p>') +
+        '</section><section class="ep-panel"><h3>站内提醒</h3><label class="hc-check" style="margin-top:15px"><input type="checkbox" data-remind="' +
+        item.id +
+        '" ' +
+        (item.remind ? "checked" : "") +
+        ">到期前 30 天提醒</label></section></aside></div>"
+      );
+    }
+    // 审批列表与处理页仅对有审批权限的角色开放操作。
+    function approvalsPage() {
+      if (state.role === "member")
+        return (
+          heading("审批待办", "当前角色为普通成员") +
+          '<section class="ep-panel"><p class="ep-muted">由部门负责人或管理员处理审批。</p></section>'
+        );
+      let rows = "";
+      for (const item of state.contracts)
+        if (canApprove(item))
+          rows +=
+            '<div class="ep-row"><div><h2>' +
+            esc(item.name) +
+            '</h2><p class="ep-small ep-muted">' +
+            item.number +
+            " · " +
+            item.owner +
+            " · " +
+            item.department +
+            '</p></div><div class="ep-actions"><span>' +
+            money(item.amount) +
+            "</span>" +
+            button(
+              "处理审批",
+              "open-approval",
+              "primary",
+              'data-id="' + item.id + '"',
+            ) +
+            "</div></div>";
+      return (
+        heading("审批待办", "按当前角色的合同范围展示") +
+        '<section class="ep-panel">' +
+        (rows || '<div class="ep-empty">没有待处理审批</div>') +
+        "</section>"
+      );
+    }
+    // 通过进入履约中的内部管理状态，退回必须填写原因。
+    function approvalDetail() {
+      const item = contract();
+      if (!canApprove(item)) return approvalsPage();
+      return (
+        heading(
+          "处理审批",
+          item.name,
+          button("返回审批待办", "back-approvals"),
+        ) +
+        '<section class="ep-panel"><dl class="ep-facts"><div><dt>合同相对方</dt><dd>' +
+        esc(item.vendor) +
+        "</dd></div><div><dt>合同金额</dt><dd>" +
+        money(item.amount) +
+        "</dd></div><div><dt>服务期间</dt><dd>" +
+        item.start +
+        " 至 " +
+        item.end +
+        "</dd></div><div><dt>经办人</dt><dd>" +
+        item.owner +
+        '</dd></div></dl><label class="ep-label">审批意见<textarea class="ep-field" id="hc-opinion" maxlength="500" placeholder="退回时填写具体原因"></textarea></label><p class="ep-small ep-muted">本演示通过后进入履约中。实际签署与生效以经办人核实的合同文件为准。</p><div class="ep-actions" style="margin-top:18px">' +
+        button("退回修改", "reject-approval", "danger") +
+        button("通过审批", "approve", "primary") +
+        "</div></section>"
+      );
+    }
+    // 展示需要跟进的付款计划与交付事项。
+    function milestonesPage() {
+      return (
+        heading("履约节点", "付款为计划事项，实际支付需财务流程确认") +
+        '<div class="ep-filters">' +
+        button(
+          "未完成",
+          "milestone-filter",
+          "",
+          'data-value="todo" aria-pressed="' +
+            (state.milestoneFilter === "todo") +
+            '"',
+        ) +
+        button(
+          "已完成",
+          "milestone-filter",
+          "",
+          'data-value="done" aria-pressed="' +
+            (state.milestoneFilter === "done") +
+            '"',
+        ) +
+        button(
+          "全部",
+          "milestone-filter",
+          "",
+          'data-value="all" aria-pressed="' +
+            (state.milestoneFilter === "all") +
+            '"',
+        ) +
+        '</div><section class="ep-panel">' +
+        milestoneRows() +
+        "</section>"
+      );
+    }
+    // 到期列表按固定演示日期计算，提醒开关仅更新配置状态。
+    function remindersPage() {
+      let rows = "";
+      for (const item of state.contracts) {
+        const days = daysUntilEnd(item);
+        if (
+          visible(item) &&
+          item.status === "履约中" &&
+          days >= 0 &&
+          days <= 30
+        )
+          rows +=
+            '<div class="ep-row"><div><button class="ep-link" data-action="open-contract" data-id="' +
+            item.id +
+            '"><h2>' +
+            esc(item.name) +
+            '</h2></button><p class="ep-small ep-muted">' +
+            item.end +
+            " 到期 · 剩余 " +
+            days +
+            ' 天</p></div><label class="hc-check"><input type="checkbox" data-remind="' +
+            item.id +
+            '" ' +
+            (item.remind ? "checked" : "") +
+            ">站内提醒</label></div>";
+      }
+      return (
+        heading(
+          "到期提醒",
+          "演示基准日 2026-11-12，展示未来 30 天内到期的履约中合同",
+        ) +
+        '<section class="ep-panel">' +
+        (rows || '<div class="ep-empty">暂无近期到期合同</div>') +
+        "</section>"
+      );
+    }
+    // 动态统计角色可见的合同数量、登记金额及未完成付款计划。
+    function reportsPage() {
+      const counts = {};
+      const sums = {};
+      let total = 0;
+      let payment = 0;
+      let max = 1;
+      for (const status of statuses) {
+        counts[status] = 0;
+        sums[status] = 0;
+      }
+      for (const item of state.contracts)
+        if (visible(item)) {
+          counts[item.status]++;
+          sums[item.status] += item.amount;
+          total += item.amount;
+          max = Math.max(max, counts[item.status]);
+        }
+      for (const point of state.milestones)
+        if (
+          !point.done &&
+          point.type === "付款" &&
+          visible(contract(point.contract))
+        )
+          payment += point.amount;
+      let bars = "";
+      let rows = "";
+      for (const status of statuses) {
+        bars +=
+          '<div class="hc-bar-row"><span>' +
+          status +
+          '</span><div class="hc-track"><div class="hc-bar" style="width:' +
+          (counts[status] / max) * 100 +
+          '%"></div></div><span>' +
+          counts[status] +
+          "</span></div>";
+        rows +=
+          "<tr><td>" +
+          status +
+          "</td><td>" +
+          counts[status] +
+          "</td><td>" +
+          money(sums[status]) +
+          "</td></tr>";
+      }
+      return (
+        heading("合同报表", "统计当前角色可见的全部演示合同") +
+        '<div class="ep-grid"><section class="ep-panel"><h3>合同登记金额</h3><p class="hc-number">' +
+        money(total) +
+        '</p><p class="ep-small ep-muted">含草稿、审批中、履约中与已结束记录</p></section><section class="ep-panel"><h3>未完成付款计划</h3><p class="hc-number">' +
+        money(payment) +
+        '</p><p class="ep-small ep-muted">对应节点尚未标记完成</p></section></div><div class="ep-grid" style="margin-top:18px"><section class="ep-panel"><h2>合同状态分布</h2><div class="hc-chart">' +
+        bars +
+        '</div></section><div class="ep-table-wrap"><table><thead><tr><th>状态</th><th>数量</th><th>登记金额</th></tr></thead><tbody>' +
+        rows +
+        "</tbody></table></div></div>"
+      );
+    }
+    // 展示权限、标准版商业条款及容量额度。
+    function permissionsPage() {
+      return (
+        heading("角色与服务", "标准版 · 当前角色 " + roleNames[state.role]) +
+        '<div class="ep-table-wrap"><table><thead><tr><th>角色</th><th>记录范围</th><th>业务记录与履约</th><th>内部审批</th></tr></thead><tbody><tr><td>普通成员</td><td>本人经办</td><td>登记、维护与跟进</td><td>提交</td></tr><tr><td>部门负责人</td><td>本部门</td><td>查看、维护与跟进</td><td>通过、退回</td></tr><tr><td>管理员</td><td>全公司</td><td>查看、维护与跟进</td><td>通过、退回</td></tr></tbody></table></div><section class="ep-panel" style="margin-top:18px"><h2>订阅与交付</h2><dl class="ep-facts"><div><dt>年度价格</dt><dd>¥28,000 / 年</dd></div><div><dt>管理账号</dt><dd>20 个</dd></div><div><dt>附件存储</dt><dd>50 GB，单文件上限 20 MB</dd></div><div><dt>标准上线</dt><dd>3–4 周，包含一次培训</dd></div></dl></section>'
+      );
+    }
+    // 用内置样本展示合同字段映射、必填校验和重复跳过。
+    function importPage() {
+      return (
+        heading("导入合同", "使用内置合同台账样例演示") +
+        '<section class="ep-panel"><h2>合同台账示例.csv</h2><div class="ep-table-wrap" style="margin:20px 0"><table><thead><tr><th>源字段</th><th>合同字段</th><th>规则</th></tr></thead><tbody><tr><td>合同编号</td><td>编号</td><td>必填、按编号识别重复</td></tr><tr><td>合同标题</td><td>名称</td><td>必填</td></tr><tr><td>签约对象</td><td>相对方</td><td>必填</td></tr><tr><td>起止日期</td><td>服务期间</td><td>起始日期不晚于到期日期</td></tr></tbody></table></div><p class="ep-small ep-muted">3 行示例，2 行有效，1 行缺少合同名称。导入记录创建为草稿。</p><div class="ep-actions" style="margin-top:18px">' +
+        button("校验并导入示例", "run-import", "primary") +
+        "</div>" +
+        (state.importStep
+          ? '<div class="ep-comment"><h3>导入结果</h3><p>' +
+            esc(state.importResult) +
+            '</p><p class="ep-small ep-error">第 4 行合同名称为空，该行未创建。</p></div>'
+          : "") +
+        "</section>"
+      );
+    }
+    // 通过填写必要信息登记一份可提交审批的草稿合同。
+    function createPage() {
+      return (
+        heading(
+          "登记合同",
+          "先保存草稿，确认内容后提交内部审批",
+          button("取消", "back-contracts"),
+        ) +
+        '<section class="ep-panel"><div class="ep-grid"><label class="ep-label">合同名称<input class="ep-field" name="hc-name" required maxlength="80"></label><label class="ep-label">合同相对方<input class="ep-field" name="hc-vendor" required maxlength="60"></label><label class="ep-label">合同金额<input class="ep-field" name="hc-amount" type="number" min="0" max="999999999" required></label><label class="ep-label">起始日期<input class="ep-field" name="hc-start" type="date" required value="2026-12-01"></label><label class="ep-label">到期日期<input class="ep-field" name="hc-end" type="date" required value="2027-11-30"></label></div>' +
+        button("保存草稿", "save-contract", "primary") +
+        "</section>"
+      );
+    }
+    // 渲染当前合同模块及角色入口。
+    function render() {
+      let content = "";
+      switch (state.page) {
+        case "detail":
+          content = detailPage();
+          break;
+        case "approvals":
+          content = approvalsPage();
+          break;
+        case "approval-detail":
+          content = approvalDetail();
+          break;
+        case "milestones":
+          content = milestonesPage();
+          break;
+        case "reminders":
+          content = remindersPage();
+          break;
+        case "reports":
+          content = reportsPage();
+          break;
+        case "permissions":
+          content = permissionsPage();
+          break;
+        case "import":
+          content = importPage();
+          break;
+        case "create":
+          content = createPage();
+          break;
+        default:
+          content = contractsPage();
+      }
+      let nav = "";
+      for (const item of navigation)
+        nav +=
+          '<button class="ep-nav" data-action="navigate" data-page="' +
+          item[0] +
+          '" ' +
+          (state.page === item[0] ||
+          (["detail", "create"].includes(state.page) &&
+            item[0] === "contracts") ||
+          (state.page === "approval-detail" && item[0] === "approvals")
+            ? 'aria-current="page"'
+            : "") +
+          ">" +
+          icon(item[2]) +
+          item[1] +
+          "</button>";
+      let roles = "";
+      for (const key of ["admin", "manager", "member"])
+        roles +=
+          '<option value="' +
+          key +
+          '" ' +
+          (state.role === key ? "selected" : "") +
+          ">" +
+          roleNames[key] +
+          "</option>";
+      root.innerHTML =
+        '<div class="ep-shell"><aside class="ep-rail"><div class="ep-logo"><span class="ep-mark">' +
+        icon("files") +
+        '</span>合策</div><nav aria-label="合同管理导航">' +
+        nav +
+        '</nav><div class="ep-account">周宁<p class="ep-small ep-muted">标准版 · 演示数据</p></div></aside><main class="ep-main"><header class="ep-top"><span class="ep-muted">启恒演示企业</span><label>体验角色<select class="ep-role" id="hc-role">' +
+        roles +
+        '</select></label></header><div class="ep-page">' +
+        content +
+        "</div>" +
+        (state.notice
+          ? '<div class="ep-notice" role="status">' +
+            esc(state.notice) +
+            "</div>"
+          : "") +
+        "</main></div>";
+      if (globalThis.lucide)
+        lucide.createIcons({ attrs: { width: 17, height: 17 } });
+    }
+    // 原生校验通过后读取表单值。
+    function field(name) {
+      const input = root.querySelector('[name="' + name + '"]');
+      if (!input || !input.reportValidity()) return null;
+      const value = input.value.trim();
+      if (!value) {
+        input.setCustomValidity("请填写此项");
+        input.reportValidity();
+        return null;
+      }
+      return value;
+    }
+    // 创建稳定的新合同标识。
+    function nextId() {
+      let max = 0;
+      for (const item of state.contracts) max = Math.max(max, item.id);
+      return max + 1;
+    }
+    // 处理合同登记、提交、审批及示例导入，按当前权限再次校验。
+    function onClick(event) {
+      const target = event.target.closest("[data-action]");
+      if (!target || !root.contains(target)) return;
+      const action = target.dataset.action;
+      state.notice = "";
+      if (action === "navigate") state.page = target.dataset.page;
+      if (action === "filter-status")
+        state.statusFilter = target.dataset.status;
+      if (action === "open-contract") {
+        const item = contract(target.dataset.id);
+        if (!visible(item)) return;
+        state.selected = item.id;
+        state.page = "detail";
+      }
+      if (action === "back-contracts") state.page = "contracts";
+      if (action === "new-contract") state.page = "create";
+      if (action === "milestone-filter")
+        state.milestoneFilter = target.dataset.value;
+      if (action === "save-contract") {
+        const name = field("hc-name");
+        const vendor = field("hc-vendor");
+        const amount = field("hc-amount");
+        const start = field("hc-start");
+        const end = field("hc-end");
+        if (
+          name === null ||
+          vendor === null ||
+          amount === null ||
+          start === null ||
+          end === null
+        )
+          return;
+        const input = root.querySelector('[name="hc-end"]');
+        input.setCustomValidity(end < start ? "到期日期不能早于起始日期" : "");
+        if (!input.reportValidity()) return;
+        const id = nextId();
+        state.contracts.push({
+          id,
+          number: "HC-2026-" + String(id).padStart(3, "0"),
+          name,
+          vendor,
+          amount: Number(amount),
+          owner: "周宁",
+          department: "采购部",
+          status: "草稿",
+          start,
+          end,
+          attachment: "",
+          notes: "",
+          remind: true,
+          history: [],
+        });
+        state.selected = id;
+        state.page = "detail";
+        state.notice = "草稿已保存";
+      }
+      if (action === "submit-approval") {
+        const item = contract();
+        if (!visible(item) || item.status !== "草稿") return;
+        item.status = "审批中";
+        state.notice = "已提交内部审批";
+      }
+      if (action === "open-approval") {
+        const item = contract(target.dataset.id);
+        if (!canApprove(item)) return;
+        state.selected = item.id;
+        state.page = "approval-detail";
+      }
+      if (action === "back-approvals") state.page = "approvals";
+      if (action === "approve" || action === "reject-approval") {
+        const item = contract();
+        if (!canApprove(item)) return;
+        const input = root.querySelector("#hc-opinion");
+        const opinion = input.value.trim();
+        if (action === "reject-approval" && !opinion) {
+          input.setCustomValidity("请填写退回原因");
+          input.reportValidity();
+          return;
+        }
+        item.history.push({
+          date: "2026-11-12",
+          by: roleNames[state.role],
+          result: action === "approve" ? "通过" : "退回",
+          comment: opinion,
+        });
+        item.status = action === "approve" ? "履约中" : "草稿";
+        state.page = "detail";
+        state.notice =
+          action === "approve"
+            ? "内部审批已通过，签署与生效需核实实际文件"
+            : "已退回草稿，请经办人修改";
+      }
+      if (action === "save-notes") {
+        const item = contract();
+        if (!visible(item)) return;
+        item.notes = root.querySelector("#hc-notes").value.trim();
+        state.notice = "业务备注已保存";
+      }
+      if (action === "run-import") {
+        let added = 0;
+        for (const sample of [
+          {
+            number: "HC-IMPORT-001",
+            name: "办公耗材年度采购",
+            vendor: "佑禾商贸",
+            amount: 24000,
+          },
+          {
+            number: "HC-IMPORT-002",
+            name: "基础设施维护服务",
+            vendor: "景川服务",
+            amount: 36000,
+          },
+        ]) {
+          let duplicate = false;
+          for (const item of state.contracts)
+            if (item.number === sample.number) duplicate = true;
+          if (!duplicate) {
+            state.contracts.push({
+              id: nextId(),
+              ...sample,
+              owner: "周宁",
+              department: "采购部",
+              status: "草稿",
+              start: "2026-12-01",
+              end: "2027-11-30",
+              attachment: "",
+              notes: "由示例导入。",
+              remind: true,
+              history: [],
+            });
+            added++;
+          }
+        }
+        state.importStep = 1;
+        state.importResult =
+          "新增 " + added + " 份，重复跳过 " + (2 - added) + " 份，失败 1 份";
+      }
+      render();
+      remember();
+    }
+    // 完成节点和提醒开关都修改原合同关联数据。
+    function onChange(event) {
+      const target = event.target;
+      if (target.id === "hc-role") {
+        state.role = target.value;
+        state.page = "contracts";
+        state.statusFilter = "all";
+        state.notice = "";
+      } else if (target.dataset.milestone) {
+        let point = null;
+        for (const item of state.milestones)
+          if (item.id === Number(target.dataset.milestone)) point = item;
+        const item = point && contract(point.contract);
+        if (!visible(item) || item.status !== "履约中") return;
+        point.done = target.checked;
+        state.notice = point.done
+          ? "节点已标记完成，报表同步更新"
+          : "节点已恢复为未完成";
+      } else if (target.dataset.remind) {
+        const item = contract(target.dataset.remind);
+        if (!visible(item)) return;
+        item.remind = target.checked;
+        state.notice = "站内提醒配置已更新";
+      } else return;
+      render();
+      remember();
+    }
+    // 用户修改表单时清除上一次业务校验提示。
+    function onInput(event) {
+      if (event.target.matches("input,textarea"))
+        event.target.setCustomValidity("");
+    }
+    // 仅接受较新的兼容宿主快照。
+    function onGlobals(event) {
+      const next = event.detail?.globals?.widgetState?.privateContent;
+      if (
+        next?.version === 1 &&
+        next.revision > state.revision &&
+        Array.isArray(next.contracts)
+      ) {
+        state = { ...state, ...next };
+        render();
+      }
+    }
+    root.addEventListener("click", onClick);
+    root.addEventListener("change", onChange);
+    root.addEventListener("input", onInput);
+    window.addEventListener("openai:set_globals", onGlobals);
+    render();
+  })();
+</script>
