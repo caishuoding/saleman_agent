@@ -2,6 +2,8 @@
 
 import random
 
+import pytest
+
 
 def history_text(index: int, size: int = 1600, prefix: str = "") -> str:
     """生成稳定且高信息密度的原文，避免重复字符被真实 tokenizer 大幅合并。"""
@@ -248,11 +250,12 @@ def test_customer_identity_and_message_roles_stay_aligned(client, provider):
     assert history[3]["content"] == second["content"]
 
 
-def test_preparation_checks_budget_before_sending_business_manual(make_client, provider):
-    """商务情境资料超过配置预算时，调用前返回可理解的错误。"""
+@pytest.mark.parametrize("kind", [0, 2])
+def test_preparation_checks_budget_before_generating_background(make_client, provider, kind):
+    """需求与完整流程的产品资料超出预算时，在生成背景前返回业务错误。"""
     client = make_client(model_context_tokens=10000)
     response = client.post(
-        "/api/practices/prepare", json={"product_id": "crm", "kind": 1, "request_id": "small-context"}
+        "/api/practices/prepare", json={"product_id": "crm", "kind": kind, "request_id": "small-context"}
     )
     assert response.status_code == 503
     assert "上下文预算" in response.json()["detail"]

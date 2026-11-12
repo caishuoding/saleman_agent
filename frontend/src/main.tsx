@@ -72,7 +72,7 @@ function RichText({ text, product }: { text: string; product?: Product }) {
   );
 }
 
-/** 依据既有侧栏原型实现产品选择、训练、复盘与历史管理。 */
+/** 实现按专项准备客户上下文的产品选择、训练、复盘与历史管理。 */
 function App() {
   const [route, setRoute] = useState(location.hash.slice(1) || "home");
   const [products, setProducts] = useState<Product[]>([]);
@@ -229,7 +229,7 @@ function App() {
   async function refresh() {
     setRecords(await api<Practice[]>("/practices"));
   }
-  /** 复用准备请求标识，让客户生成失败后重试仍对应同一初始场次。 */
+  /** 按专项准备练习，复用请求标识以恢复失败的背景生成并避免重复场次。 */
   async function prepareProduct(productId: string, kind: number) {
     if (
       prepareKey.current?.product !== productId ||
@@ -608,7 +608,7 @@ function App() {
       </aside>
     );
   }
-  /** 绘制不包含隐藏需求的本场任务信息。 */
+  /** 展示本场公开任务信息，商务练习按实际存在的客户身份字段显示。 */
   function details() {
     return (
       <dl className="details">
@@ -620,20 +620,26 @@ function App() {
           <dt>你的角色</dt>
           <dd>乙方产品销售</dd>
         </div>
-        <div>
-          <dt>甲方公司</dt>
-          <dd>{active?.scenario.company}</dd>
-        </div>
+        {active?.scenario.company && (
+          <div>
+            <dt>甲方公司</dt>
+            <dd>{active.scenario.company}</dd>
+          </div>
+        )}
         <div>
           <dt>甲方负责人</dt>
           <dd>
-            {active?.scenario.person} · {active?.scenario.role}
+            {[active?.scenario.person, active?.scenario.role]
+              .filter(Boolean)
+              .join(" · ")}
           </dd>
         </div>
-        <div>
-          <dt>业务背景</dt>
-          <dd>{active?.scenario.introduction}</dd>
-        </div>
+        {active?.scenario.introduction && (
+          <div>
+            <dt>业务背景</dt>
+            <dd>{active.scenario.introduction}</dd>
+          </div>
+        )}
         <div>
           <dt>本次任务</dt>
           <dd>{GOALS[active?.kind || 0]}</dd>
@@ -820,7 +826,7 @@ function App() {
     for (const p of products) if (p.id === id) return p.name;
     return id;
   }
-  /** 根据当前路由绘制主区域，训练布局沿用原型。 */
+  /** 按路由和专项绘制产品准备状态、任务、训练及复盘页面。 */
   function content() {
     if (loading && !busy)
       return (
@@ -893,7 +899,8 @@ function App() {
           <div className="product-library">{products.map(renderProduct)}</div>
           {busy && (
             <p className="loading" role="status">
-              <LoaderCircle className="spin" /> 正在准备客户情境…
+              <LoaderCircle className="spin" />{" "}
+              {Number(arg) === 1 ? "正在准备练习…" : "正在准备客户背景…"}
             </p>
           )}
         </div>
@@ -993,10 +1000,14 @@ function App() {
                 <div className="avatar">{active.scenario.person?.[0]}</div>
                 <div>
                   <h2>
-                    与{active.scenario.person}沟通{selected?.category}方案
+                    {active.kind === 1
+                      ? `与采购方讨论${selected?.name}合作条件`
+                      : `与${active.scenario.person}沟通${selected?.category}方案`}
                   </h2>
                   <p className="small muted">
-                    甲方 · {active.scenario.company} · {active.scenario.role}
+                    {["甲方", active.scenario.company, active.scenario.role]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </p>
                 </div>
               </div>
@@ -1029,7 +1040,9 @@ function App() {
                 <div>
                   <h2>{active.scenario.person}</h2>
                   <p className="muted small">
-                    甲方 · {active.scenario.company} · {active.scenario.role}
+                    {["甲方", active.scenario.company, active.scenario.role]
+                      .filter(Boolean)
+                      .join(" · ")}
                   </p>
                 </div>
               </div>

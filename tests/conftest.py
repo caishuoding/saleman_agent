@@ -37,7 +37,7 @@ def provider():
             """静默常规访问日志，避免输出模型请求资料。"""
 
         def do_POST(self):
-            """按真实 HTTP 请求内容生成确定性情境、摘要或回复。"""
+            """按请求的背景 JSON 格式、摘要任务或对话消息返回确定性 SSE。"""
             body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
             with request_lock:
                 state["requests"].append(body)
@@ -50,7 +50,7 @@ def provider():
                 self.send_response(503)
                 self.end_headers()
                 return
-            if "准备一场" in system:
+            if "只输出 JSON" in system and "private_background" in system:
                 result = json.dumps(
                     {
                         "company": "测试企业",
