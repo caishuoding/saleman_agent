@@ -46,7 +46,7 @@ class DeepSeek:
     async def stream(
         self, messages: list[dict], max_tokens: int, purpose: str | None = None
     ) -> AsyncIterator[str]:
-        """逐段生成正文，逐次持久化本地编码数和最终帧中的服务端真实用量。"""
+        """逐段生成并保存真实用量，输出截断时读完最终统计后再报告失败。"""
         if not self.settings.deepseek_api_key:
             raise ModelError("请在项目 .env 中配置 DEEPSEEK_API_KEY，再重试。")
         scope = CALL_SCOPE.get() or {}
@@ -82,11 +82,14 @@ class DeepSeek:
                 if response.status_code != 200:
                     raise ModelError(f"模型服务返回 {response.status_code}，请检查配置后重试。")
                 finished = False
+                failure: str | None = None
                 async for line in response.aiter_lines():
                     if not line.startswith("data:"):
                         continue
                     data = line[5:].strip()
                     if data == "[DONE]":
+                        if failure:
+                            raise ModelError(failure)
                         if not finished:
                             raise ModelError("模型回复未完整结束，请重试。")
                         status = "complete"
@@ -97,12 +100,15 @@ class DeepSeek:
                     for choice in payload.get("choices", []):
                         reason = choice.get("finish_reason")
                         if reason == "length":
-                            raise ModelError("模型回复达到输出上限，请调整输出预算后重试。")
+                            failure = "模型回复达到输出上限，请调整输出预算后重试。"
+                            finished = True
                         if reason == "stop":
                             finished = True
                         text = choice.get("delta", {}).get("content")
                         if text:
                             yield text
+                if failure:
+                    raise ModelError(failure)
                 if not finished:
                     raise ModelError("模型连接中断，请重试。")
                 status = "complete"

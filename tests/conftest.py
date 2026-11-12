@@ -25,6 +25,7 @@ def provider():
         "fail_summary": False,
         "omit_usage": False,
         "finish_reason": "stop",
+        "usage_only_frame": False,
         "barrier": None,
     }
     request_lock = threading.Lock()
@@ -102,7 +103,11 @@ def provider():
                     "prompt_cache_miss_tokens": 104 + request_number * 7,
                 }
                 state["usages"].append(usage)
-                ending["usage"] = usage
+                if state["usage_only_frame"]:
+                    self.wfile.write(("data: " + json.dumps(ending) + "\n\n").encode())
+                    ending = {"choices": [], "usage": usage}
+                else:
+                    ending["usage"] = usage
             self.wfile.write(("data: " + json.dumps(ending) + "\n\ndata: [DONE]\n\n").encode())
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)

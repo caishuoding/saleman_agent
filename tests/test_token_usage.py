@@ -3,6 +3,8 @@
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
+import pytest
+
 
 def prepare(client, key):
     """经正式入口准备并开始一场独立练习。"""
@@ -55,10 +57,12 @@ def test_missing_usage_is_unknown_and_failed_retry_has_own_record(client, provid
     assert data["totals"]["unreported_calls"] == 2
 
 
-def test_length_failure_preserves_received_usage(client, provider):
-    """模型达到输出上限时仍保存最后一帧已返回的真实用量。"""
+@pytest.mark.parametrize("usage_only_frame", [False, True])
+def test_length_failure_preserves_received_usage(client, provider, usage_only_frame):
+    """输出达到上限时，兼容同帧及随后独立终帧上报的实际用量。"""
     pid = prepare(client, "length-usage")
     provider["finish_reason"] = "length"
+    provider["usage_only_frame"] = usage_only_frame
     request = {"agent": "customer", "content": "说说你们的情况", "request_id": "length-message"}
     assert "event: error" in client.post(f"/api/practices/{pid}/messages", json=request).text
     data = client.get(f"/api/practices/{pid}/usage").json()
@@ -74,7 +78,7 @@ def test_concurrent_practices_keep_usage_separate(client, provider):
 
     def send(pid):
         """从公开接口并发发送独立练习消息。"""
-        request = {"agent": "customer", "content": "介绍当前情况", "request_id": "same-request-id"}
+        request = {"agent": "customer", "content": f"关联练习 {pid}", "request_id": "same-request-id"}
         return client.post(f"/api/practices/{pid}/messages", json=request).text
 
     with ThreadPoolExecutor(max_workers=2) as pool:
@@ -88,6 +92,14 @@ def test_concurrent_practices_keep_usage_separate(client, provider):
         139,
     }
     assert first_calls[-1]["id"] != second_calls[-1]["id"]
+    for pid, calls in [(first, first_calls), (second, second_calls)]:
+        matching = [
+            index
+            for index, request in enumerate(provider["requests"], start=1)
+            if request["messages"][-1]["content"] == f"关联练习 {pid}"
+        ]
+        assert len(matching) == 1
+        assert calls[-1]["usage"]["prompt_tokens"] == 111 + matching[0] * 7
 
 
 def test_usage_remains_available_after_app_reload(make_client):

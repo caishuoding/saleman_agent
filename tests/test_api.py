@@ -63,6 +63,8 @@ def test_practice_can_chat_review_resume_and_restart(client, provider):
     fresh = client.post(f"/api/practices/{restarted['id']}/start").json()
     assert fresh["started_at"] != initial_time
     assert client.get(f"/api/practices/{pid}").json()["started_at"] == initial_time
+    calls = client.get(f"/api/practices/{pid}/usage").json()["calls"]
+    assert {call["purpose"] for call in calls} == {"prepare", "customer", "coach", "review"}
 
 
 def test_failed_message_retries_in_place_before_next_message(client, provider):
