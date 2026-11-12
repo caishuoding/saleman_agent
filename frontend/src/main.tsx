@@ -500,7 +500,7 @@ function App() {
       </form>
     );
   }
-  /** 按消息角色展示原文，并让失败请求可使用原标识重试。 */
+  /** 展示问答原文，进行中的失败请求可重试，已结束客户消息显示终态。 */
   function renderExchange(exchange: Exchange) {
     if (exchange.agent === "review") return null;
     const matches = live?.request_id === exchange.request_id;
@@ -524,15 +524,21 @@ function App() {
         ) : (
           !matches && (
             <div className="message failed">
-              <span>{exchange.error || "上次生成未完成"}</span>
-              <button
-                className="button"
-                data-action="retry"
-                data-id={exchange.request_id}
-                disabled={busy}
-              >
-                重新生成
-              </button>
+              <span>
+                {exchange.agent === "customer" && active?.status === "done"
+                  ? "本轮客户回复未完成"
+                  : exchange.error || "上次生成未完成"}
+              </span>
+              {(exchange.agent !== "customer" || active?.status !== "done") && (
+                <button
+                  className="button"
+                  data-action="retry"
+                  data-id={exchange.request_id}
+                  disabled={busy}
+                >
+                  重新生成
+                </button>
+              )}
             </div>
           )
         )}

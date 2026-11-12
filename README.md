@@ -13,7 +13,7 @@ cp .env.example .env
 在 `.env` 中填写 `DEEPSEEK_API_KEY`。默认连接本机 `54329` 端口的项目专用 PostgreSQL。
 
 ```bash
-docker compose up -d db
+docker compose up -d --wait db
 uv sync --frozen
 npm --prefix frontend ci
 npm --prefix frontend run build

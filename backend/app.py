@@ -240,6 +240,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     "\n依据产品资料准备已知功能与初步方案，任何报价均排除：\n" + selected["manual"]
                 )
             try:
+                if memory.counter.messages(context) > memory.budget(4096):
+                    raise ModelError("客户情境准备材料超过当前上下文预算，请增大上下文配置后重试。")
                 result = await model.complete(context, 4096)
                 parsed = json.loads(
                     result.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
@@ -416,6 +418,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                                 "\n产品资料：\n" + practice.manual,
                             },
                         ]
+                        fixed.append(
+                            {
+                                "role": "user",
+                                "content": "本场客户已经说出的开场白：\n" + practice.scenario["opening"],
+                            }
+                        )
                         if practice.report:
                             fixed.append(
                                 {"role": "user", "content": "本次已生成的复盘总结：\n" + practice.report}

@@ -176,3 +176,46 @@ def test_coach_compresses_sources_independently_and_reviews_current_context(make
     assert "HIDDEN_NEED" not in str(prompt)
     after = client.get(f"/api/practices/{pid}").json()
     assert len(after["exchanges"]) == 20
+
+
+def test_coach_sees_public_opening_before_first_customer_message(client, provider):
+    """客户开场白也是已发生的沟通，教练和复盘都能获得它。"""
+    draft = client.post(
+        "/api/practices/prepare", json={"product_id": "crm", "kind": 0, "request_id": "opening-prepare"}
+    ).json()
+    pid = draft["id"]
+    client.post(f"/api/practices/{pid}/start")
+    question = {"agent": "coach", "content": "客户刚才开场说了什么？", "request_id": "opening-coach"}
+    assert "event: done" in client.post(f"/api/practices/{pid}/messages", json=question).text
+    assert draft["scenario"]["opening"] in str(provider["requests"][-1]["messages"])
+    assert "HIDDEN_NEED" not in str(provider["requests"][-1]["messages"])
+
+
+def test_preparation_checks_budget_before_sending_business_manual(make_client, provider):
+    """商务情境资料超过配置预算时，调用前返回可理解的错误。"""
+    client = make_client(model_context_tokens=12000)
+    response = client.post(
+        "/api/practices/prepare", json={"product_id": "crm", "kind": 1, "request_id": "small-context"}
+    )
+    assert response.status_code == 503
+    assert "上下文预算" in response.json()["detail"]
+    assert provider["requests"] == []
+
+
+def test_review_failure_can_retry_without_reopening_customer_chat(client, provider):
+    """复盘失败保留结束状态，重试同一任务后可继续教练交流。"""
+    draft = client.post(
+        "/api/practices/prepare", json={"product_id": "crm", "kind": 0, "request_id": "review-failure"}
+    ).json()
+    pid = draft["id"]
+    client.post(f"/api/practices/{pid}/start")
+    provider["fail_next"] = True
+    body = {"request_id": "finish-failed"}
+    assert "event: error" in client.post(f"/api/practices/{pid}/finish", json=body).text
+    state = client.get(f"/api/practices/{pid}").json()
+    assert state["status"] == "done" and state["report_status"] == "failed"
+    message = {"request_id": "ended-customer", "agent": "customer", "content": "再聊一句"}
+    assert "本场练习已经结束" in client.post(f"/api/practices/{pid}/messages", json=message).text
+    assert "event: done" in client.post(f"/api/practices/{pid}/finish", json=body).text
+    state = client.get(f"/api/practices/{pid}").json()
+    assert len(state["exchanges"]) == 1 and state["report_status"] == "complete"
